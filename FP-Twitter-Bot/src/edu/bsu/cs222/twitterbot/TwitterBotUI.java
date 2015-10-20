@@ -1,3 +1,4 @@
+package edu.bsu.cs222.twitterbot;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
