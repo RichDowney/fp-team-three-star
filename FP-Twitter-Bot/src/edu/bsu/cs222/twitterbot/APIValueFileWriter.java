@@ -16,9 +16,14 @@ public class APIValueFileWriter {
 	
 	public JSONObject createJSONObject(){
 		JSONObject apiJsonObject = new JSONObject();
-		apiJsonObject.put("apiKey", this.apiKey);
-		apiJsonObject.put("apiSecret", this.apiSecret);
+		asMap(apiJsonObject).put("apiKey", this.apiKey);
+		asMap(apiJsonObject).put("apiSecret", this.apiSecret);
 		return apiJsonObject;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private final static Map<Object,Object> asMap(JSONObject jsonObject) {
+	  return jsonObject;
 	}
 	
 }
