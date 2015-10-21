@@ -11,6 +11,11 @@ import org.json.simple.parser.ParseException;
 public class ReadAPIValuesFromFile {
 	private JSONObject apiValueJSONObject;
 	private JSONParser parser = new JSONParser();
+	private String filePath;
+	
+	public ReadAPIValuesFromFile(String filePath) {
+		this.filePath = filePath;
+	}
 	
 	public void tryTtoReadFromFile() {
 		try {
@@ -21,7 +26,7 @@ public class ReadAPIValuesFromFile {
 	}
 
 	public void readFromFile() throws FileNotFoundException, IOException, ParseException {
-		Object fileObject = parser.parse(new FileReader("twitter-api-values/api-values.txt"));
+		Object fileObject = parser.parse(new FileReader(this.filePath));
 		this.apiValueJSONObject = (JSONObject) fileObject;
 	}
 	
