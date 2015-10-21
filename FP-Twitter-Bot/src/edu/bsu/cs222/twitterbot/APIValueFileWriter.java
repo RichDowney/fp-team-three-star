@@ -1,5 +1,8 @@
 package edu.bsu.cs222.twitterbot;
 
+import java.util.Map;
+
+import org.json.simple.JSONObject;
 
 public class APIValueFileWriter {
 	
@@ -10,5 +13,12 @@ public class APIValueFileWriter {
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
 	}
-
+	
+	public JSONObject createJSONObject(){
+		JSONObject apiJsonObject = new JSONObject();
+		apiJsonObject.put("apiKey", this.apiKey);
+		apiJsonObject.put("apiSecret", this.apiSecret);
+		return apiJsonObject;
+	}
+	
 }
