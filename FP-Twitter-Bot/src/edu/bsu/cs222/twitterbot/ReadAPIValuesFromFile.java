@@ -24,5 +24,15 @@ public class ReadAPIValuesFromFile {
 		Object fileObject = parser.parse(new FileReader("twitter-api-values/api-values.txt"));
 		this.apiValueJSONObject = (JSONObject) fileObject;
 	}
+	
+	public String getAPIKey(){
+		String apiKey = (String) this.apiValueJSONObject.get("apiKey");
+		return apiKey;
+	}
+	
+	public String getAPISecret(){
+		String apiSecret = (String) this.apiValueJSONObject.get("apiSecret");
+		return apiSecret;
+	}
 
 }
