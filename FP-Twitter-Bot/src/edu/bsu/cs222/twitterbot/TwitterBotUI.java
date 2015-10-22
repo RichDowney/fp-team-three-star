@@ -1,6 +1,10 @@
 package edu.bsu.cs222.twitterbot;
 
+import java.io.IOException;
+
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,6 +39,7 @@ public class TwitterBotUI extends Application {
 		setGrid(grid);
 		configureTextFields();
 		setStage(primaryStage);
+		setpostTweetButtonAction();
 
 	}
 
@@ -75,6 +80,29 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefRowCount(5);
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
+	}
+	
+	private void setpostTweetButtonAction() {
+		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tryToWriteApiInputFieldsToFile();
+			}
+		});
+	}
+	
+	private void tryToWriteApiInputFieldsToFile() {
+		try {
+			writeApiInputFieldsToFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void writeApiInputFieldsToFile() throws IOException {
+		String apiKey = apiKeyInputField.getText();
+		String apiSecret = apiSecretInputField.getText();
+		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
+		apiWriter.writeToJsonFile();
 	}
 	
 }
