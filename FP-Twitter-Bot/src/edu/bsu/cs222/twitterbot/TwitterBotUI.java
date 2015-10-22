@@ -38,14 +38,6 @@ public class TwitterBotUI extends Application {
 
 	}
 
-	private void setStage(Stage primaryStage) {
-		primaryStage.setTitle("Twitter Bot");
-		primaryStage.setScene(scene);
-		primaryStage.sizeToScene();
-		primaryStage.show();
-
-	}
-
 	private void setGrid(GridPane grid) {
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
@@ -75,6 +67,14 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefRowCount(5);
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
+	}
+	
+	private void setStage(Stage primaryStage) {
+		primaryStage.setTitle("Twitter Bot");
+		primaryStage.setScene(scene);
+		primaryStage.sizeToScene();
+		primaryStage.show();
+
 	}
 	
 }
