@@ -1,6 +1,10 @@
 package edu.bsu.cs222.twitterbot;
 
+import java.io.IOException;
+
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class TwitterBotUI extends Application {
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -25,9 +29,9 @@ public class TwitterBotUI extends Application {
 	private Button postTweetButton = new Button("Post Tweet");
 	private Button getVerifyURLButton = new Button("Get Verify URL");
 	private Label apiKeyLabel = new Label("API Key");
-	private Label apiSecretLabel = new Label ("API Secret");
-	private Label tokenVerifierLabel = new Label( "Token Verifier Code" );
-	private Label tweetTextLabel = new Label( "Tweet Text Content" );
+	private Label apiSecretLabel = new Label("API Secret");
+	private Label tokenVerifierLabel = new Label("Token Verifier Code");
+	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene scene = new Scene(grid);
 
 	@Override
@@ -50,7 +54,7 @@ public class TwitterBotUI extends Application {
 		grid.add(apiKeyInputField, 1, 0);
 		grid.add(apiSecretInputField, 1, 1);
 		grid.add(tokenVerifierInputField, 1, 2);
-		grid.add(tweetTextInputField, 1 , 3);
+		grid.add(tweetTextInputField, 1, 3);
 		grid.add(postTweetButton, 1, 4);
 		grid.add(getVerifyURLButton, 0, 4);
 		grid.add(apiKeyLabel, 0, 0);
@@ -58,23 +62,46 @@ public class TwitterBotUI extends Application {
 		grid.add(tokenVerifierLabel, 0, 2);
 		grid.add(tweetTextLabel, 0, 3);
 	}
-	
+
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
 		apiSecretInputField.setPromptText("Paste in API Secret");
-		tokenVerifierInputField.setPromptText( "Paste in Verify Code" );
-		tweetTextInputField.setPromptText( "Tweet limited to 140 Characters" );
+		tokenVerifierInputField.setPromptText("Paste in Verify Code");
+		tweetTextInputField.setPromptText("Tweet limited to 140 Characters");
 		tweetTextInputField.setPrefRowCount(5);
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
 	}
-	
+
 	private void setStage(Stage primaryStage) {
 		primaryStage.setTitle("Twitter Bot");
 		primaryStage.setScene(scene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
-
+		setPostTweetButtonAction();
 	}
-	
+
+	private void setPostTweetButtonAction() {
+		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tryToWriteApiInputFieldsToFile();
+			}
+		});
+	}
+
+	private void tryToWriteApiInputFieldsToFile() {
+		try {
+			writeApiInputFieldsToFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void writeApiInputFieldsToFile() throws IOException {
+		String apiKey = apiKeyInputField.getText();
+		String apiSecret = apiSecretInputField.getText();
+		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
+		apiWriter.writeToJsonFile();
+	}
+
 }
