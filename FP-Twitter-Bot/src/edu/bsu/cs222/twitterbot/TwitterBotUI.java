@@ -40,7 +40,6 @@ public class TwitterBotUI extends Application {
 		configureTextFields();
 		setStage(primaryStage);
 		setpostTweetButtonAction();
-
 	}
 
 	private void setGrid(GridPane grid) {
@@ -106,10 +105,21 @@ public class TwitterBotUI extends Application {
 		}
 	}
 	
+<<<<<<< HEAD
 	private void writeApiInputFieldsToFile() throws IOException {
 		String apiKey = apiKeyInputField.getText();
 		String apiSecret = apiSecretInputField.getText();
 		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
 		apiWriter.writeToJsonFile();
     }
+=======
+	private void setStage(Stage primaryStage) {
+		primaryStage.setTitle("Twitter Bot");
+		primaryStage.setScene(scene);
+		primaryStage.sizeToScene();
+		primaryStage.show();
+
+	}
+	
+>>>>>>> master
 }
