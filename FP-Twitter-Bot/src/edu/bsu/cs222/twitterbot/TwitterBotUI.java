@@ -73,6 +73,14 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
 	}
+    
+    private void setStage(Stage primaryStage) {
+        primaryStage.setTitle("Twitter Bot");
+        primaryStage.setScene(scene);
+        primaryStage.sizeToScene();
+        primaryStage.show();
+        
+    }
 	
 	private void setStage(Stage primaryStage) {
 		primaryStage.setTitle("Twitter Bot");
@@ -103,6 +111,5 @@ public class TwitterBotUI extends Application {
 		String apiSecret = apiSecretInputField.getText();
 		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
 		apiWriter.writeToJsonFile();
-	}
-	
+    }
 }
