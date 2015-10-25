@@ -13,8 +13,6 @@ public class OAuthTest {
 	public void createOAuthServiceTest(){
 		OAuth oAuth = new OAuth(this.apiKey, this.apiSecret);
 		OAuthService service = oAuth.createOAuthService();
-		String serviceString = service.toString();
-		System.out.println(serviceString);
-		assertTrue(serviceString.equals("org.scribe.oauth.OAuth10aServiceImpl@15327b79"));
+		assertTrue(service != null);
 	}
 }
