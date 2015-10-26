@@ -10,6 +10,7 @@ public class OAuth {
 	
 	private String apiKey;
 	private String apiSecret;
+	private OAuthService service;
 	private Token requestToken;
 	private Token accessToken;
 	private Verifier verifier;
@@ -20,12 +21,11 @@ public class OAuth {
 		this.apiSecret = apiSecret;
 	}
 	
-	public OAuthService createOAuthService(){
-		OAuthService service = new ServiceBuilder()
+	public void createOAuthService(){
+		this.service = new ServiceBuilder()
 				.provider(TwitterApi.class)
 				.apiKey(this.apiKey)
 				.apiSecret(this.apiSecret)
 				.build();
-		return service;
 	}
 }
