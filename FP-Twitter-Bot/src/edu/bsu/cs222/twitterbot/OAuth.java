@@ -37,4 +37,8 @@ public class OAuth {
 		this.authorizationUrl = service.getAuthorizationUrl(requestToken);
 	}
 	
+	public void createVerifier(String verifierCode){
+		this.verifier = new Verifier(verifierCode);
+	}
+	
 }
