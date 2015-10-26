@@ -41,4 +41,8 @@ public class OAuth {
 		this.verifier = new Verifier(verifierCode);
 	}
 	
+	public void createAccessToken(){
+		this.accessToken = service.getAccessToken(requestToken, verifier);
+	}
+	
 }
