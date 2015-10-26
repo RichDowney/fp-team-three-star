@@ -32,4 +32,9 @@ public class OAuth {
 	public void createRequestToken(){
 		this.requestToken = service.getRequestToken();
 	}
+	
+	public void createAuthorizationUrl() {
+		this.authorizationUrl = service.getAuthorizationUrl(requestToken);
+	}
+	
 }
