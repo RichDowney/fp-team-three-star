@@ -28,4 +28,8 @@ public class OAuth {
 				.apiSecret(this.apiSecret)
 				.build();
 	}
+	
+	public void createRequestToken(){
+		this.requestToken = service.getRequestToken();
+	}
 }
