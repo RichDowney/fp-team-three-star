@@ -33,6 +33,7 @@ public class TwitterBotUI extends Application {
 	private Label apiSecretLabel = new Label("API Secret");
 	private Button apiNextButton = new Button("Next");
 	private Button readApiValuesButton = new Button("Get Saved API Values");
+	private Button writeApiValuesButton = new Button("Save API Values");
 	private Scene apiScene = new Scene(apiGrid);
 
 	private GridPane grid = new GridPane();
@@ -84,6 +85,7 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiKeyLabel, 0, 0);
 		apiGrid.add(apiSecretLabel, 0, 1);
 		apiGrid.add(readApiValuesButton, 0, 2);
+		apiGrid.add(writeApiValuesButton, 1, 2);
 		apiGrid.add(apiNextButton, 0, 3);
 	}
 
@@ -101,6 +103,7 @@ public class TwitterBotUI extends Application {
 	
 	private void setButtonActions(Stage primaryStage) {
 		setReadApiValuesButtonAction();
+		setWriteApiValuesButtonAction();
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setPostTweetButtonAction();
@@ -143,6 +146,22 @@ public class TwitterBotUI extends Application {
 	private void setApiValues() {
 		apiKey = apiKeyInputField.getText();
 		apiSecret = apiSecretInputField.getText();
+	}
+	
+	private void setWriteApiValuesButtonAction() {
+		writeApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				writeApiValuesToFile();
+				setApiValues();
+			}
+		});
+	}
+	
+	private void writeApiValuesToFile() {
+		String apiKeyValueToWrite = apiKeyInputField.getText();
+		String apiSecretValueToWrite = apiSecretInputField.getText();
+		APIValueFileWriter apiValueFileWriter = new APIValueFileWriter(apiKeyValueToWrite, apiSecretValueToWrite);
+		apiValueFileWriter.tryToWriteToJsonFile();
 	}
 	
 	private void switchSceneToGrid(Stage primaryStage) {
