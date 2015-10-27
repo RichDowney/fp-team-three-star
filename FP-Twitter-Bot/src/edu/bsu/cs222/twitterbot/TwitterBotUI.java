@@ -22,18 +22,24 @@ public class TwitterBotUI extends Application {
 		launch(args);
 	}
 	
+	private String apiKey;
+	private String apiSecret;
 	private OAuth oAuth;
-
-	private GridPane grid = new GridPane();
+	
+	private GridPane apiGrid = new GridPane();
 	private TextField apiKeyInputField = new TextField();
 	private TextField apiSecretInputField = new TextField();
+	private Label apiKeyLabel = new Label("API Key");
+	private Label apiSecretLabel = new Label("API Secret");
+	private Button apiNextButton = new Button("Next");
+	private Scene apiScene = new Scene(apiGrid);
+
+	private GridPane grid = new GridPane();
 	private TextField authorizationUrlOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
 	private Button postTweetButton = new Button("Post Tweet");
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
-	private Label apiKeyLabel = new Label("API Key");
-	private Label apiSecretLabel = new Label("API Secret");
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene scene = new Scene(grid);
@@ -41,7 +47,11 @@ public class TwitterBotUI extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		setGrid(grid);
+		addtoGrid();
+		setGrid(apiGrid);
+		addtoApiGrid();
 		configureTextFields();
+		setButtonActions(primaryStage);
 		setStage(primaryStage);
 
 	}
@@ -51,7 +61,6 @@ public class TwitterBotUI extends Application {
 		grid.setHgap(15);
 		grid.setVgap(15);
 		grid.setPadding(new Insets(30, 30, 30, 30));
-		addtoGrid();
 	}
 
 	private void addtoGrid() {
@@ -67,6 +76,14 @@ public class TwitterBotUI extends Application {
 		grid.add(tokenVerifierLabel, 0, 3);
 		grid.add(tweetTextLabel, 0, 4);
 	}
+	
+	private void addtoApiGrid() {
+		apiGrid.add(apiKeyInputField, 1, 0);
+		apiGrid.add(apiSecretInputField, 1, 1);
+		apiGrid.add(apiKeyLabel, 0, 0);
+		apiGrid.add(apiSecretLabel, 0, 1);
+		apiGrid.add(apiNextButton, 0, 2);
+	}
 
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
@@ -79,14 +96,36 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
 	}
+	
+	private void setButtonActions(Stage primaryStage) {
+		setGetAuthorizationUrlButtonAction();
+		setPostTweetButtonAction();
+		setApiNextButtonAction(primaryStage);
+	}
 
 	private void setStage(Stage primaryStage) {
 		primaryStage.setTitle("Twitter Bot");
-		primaryStage.setScene(scene);
+		primaryStage.setScene(apiScene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
-		setGetAuthorizationUrlButtonAction();
-		setPostTweetButtonAction();
+	}
+	
+	private void setApiNextButtonAction(Stage primaryStage) {
+		apiNextButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				setApiValues();
+				switchSceneToGrid(primaryStage);
+			}
+		});
+	}
+	
+	private void setApiValues() {
+		apiKey = apiKeyInputField.getText();
+		apiSecret = apiSecretInputField.getText();
+	}
+	
+	private void switchSceneToGrid(Stage primaryStage) {
+		primaryStage.setScene(scene);
 	}
 	
 	private void setGetAuthorizationUrlButtonAction() {
@@ -106,8 +145,6 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void createOAuthInstance() {
-		String apiKey = apiKeyInputField.getText();
-		String apiSecret = apiSecretInputField.getText();
 		oAuth = new OAuth(apiKey, apiSecret);
 	}
 	
