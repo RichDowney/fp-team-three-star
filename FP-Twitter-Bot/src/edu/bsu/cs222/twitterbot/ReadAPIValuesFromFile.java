@@ -31,12 +31,28 @@ public class ReadAPIValuesFromFile {
 	}
 	
 	public String getAPIKey(){
+		String apiKey = parseOutAPIKey();
+		return apiKey;
+	}
+	
+	private String parseOutAPIKey() {
 		String apiKey = (String) this.apiValueJSONObject.get("apiKey");
+		if (apiKey.equalsIgnoreCase("")) {
+			apiKey = "No Saved API Key";
+		}
 		return apiKey;
 	}
 	
 	public String getAPISecret(){
+		String apiSecret = parseOutAPISecret();
+		return apiSecret;
+	}
+	
+	private String parseOutAPISecret() {
 		String apiSecret = (String) this.apiValueJSONObject.get("apiSecret");
+		if (apiSecret.equalsIgnoreCase("")) {
+			apiSecret = "No Saved API Secret";
+		}
 		return apiSecret;
 	}
 
