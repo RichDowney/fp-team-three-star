@@ -1,6 +1,7 @@
 package edu.bsu.cs222.twitterbot;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -120,6 +121,7 @@ public class TwitterBotUI extends Application {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				tryToWriteApiInputFieldsToFile();
+				tryToPostTweet();
 			}
 		});
 	}
@@ -137,6 +139,23 @@ public class TwitterBotUI extends Application {
 		String apiSecret = apiSecretInputField.getText();
 		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
 		apiWriter.writeToJsonFile();
+	}
+	
+	private void tryToPostTweet() {
+		try {
+			postTweet();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void postTweet() throws UnsupportedEncodingException {
+		String tweetText = tweetTextInputField.getText();
+		String verifierCode = tokenVerifierInputField.getText();
+		oAuth.createVerifier(verifierCode);
+		oAuth.createAccessToken();
+		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
+		tweetPoster.tryToPostTweet();
 	}
 
 }
