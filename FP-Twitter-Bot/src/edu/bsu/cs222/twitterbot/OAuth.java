@@ -50,6 +50,10 @@ public class OAuth {
 		return this.service;
 	}
 	
+	public String authorizationUrl(){
+		return this.authorizationUrl;
+	}
+	
 	public Token getAccessToken(){
 		return this.accessToken;
 	}
