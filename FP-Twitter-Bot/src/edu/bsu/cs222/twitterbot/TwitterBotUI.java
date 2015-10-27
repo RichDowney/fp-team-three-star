@@ -41,6 +41,7 @@ public class TwitterBotUI extends Application {
 	private TextField tokenVerifierInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
 	private Button postTweetButton = new Button("Post Tweet");
+	private Button backToApiButton = new Button("Previous");
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
@@ -72,6 +73,7 @@ public class TwitterBotUI extends Application {
 		grid.add(tokenVerifierInputField, 1, 3);
 		grid.add(tweetTextInputField, 1, 4);
 		grid.add(postTweetButton, 1, 5);
+		grid.add(backToApiButton, 0, 5);
 		grid.add(getAuthorizationUrlButton, 0, 2);
 		grid.add(apiKeyLabel, 0, 0);
 		grid.add(apiSecretLabel, 0, 1);
@@ -106,6 +108,7 @@ public class TwitterBotUI extends Application {
 		setWriteApiValuesButtonAction();
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
+		setBackToApiButtonAction(primaryStage);
 		setPostTweetButtonAction();
 	}
 
@@ -193,7 +196,7 @@ public class TwitterBotUI extends Application {
 		authorizationUrlOutputField.setText(authorizationUrl);
 		
 	}
-
+	
 	private void setPostTweetButtonAction() {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -201,6 +204,18 @@ public class TwitterBotUI extends Application {
 				tryToPostTweet();
 			}
 		});
+	}
+
+	private void setBackToApiButtonAction(Stage primaryStage) {
+		backToApiButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToApiScene(primaryStage);
+			}
+		});
+	}
+	
+	private void switchSceneToApiScene(Stage primaryStage) {
+		primaryStage.setScene(apiScene);
 	}
 
 	private void tryToWriteApiInputFieldsToFile() {
