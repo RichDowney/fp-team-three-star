@@ -32,6 +32,7 @@ public class TwitterBotUI extends Application {
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
 	private Button apiNextButton = new Button("Next");
+	private Button readApiValuesButton = new Button("Get Saved API Values");
 	private Scene apiScene = new Scene(apiGrid);
 
 	private GridPane grid = new GridPane();
@@ -82,7 +83,8 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiSecretInputField, 1, 1);
 		apiGrid.add(apiKeyLabel, 0, 0);
 		apiGrid.add(apiSecretLabel, 0, 1);
-		apiGrid.add(apiNextButton, 0, 2);
+		apiGrid.add(readApiValuesButton, 0, 2);
+		apiGrid.add(apiNextButton, 0, 3);
 	}
 
 	private void configureTextFields() {
@@ -98,9 +100,10 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void setButtonActions(Stage primaryStage) {
+		setReadApiValuesButtonAction();
+		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setPostTweetButtonAction();
-		setApiNextButtonAction(primaryStage);
 	}
 
 	private void setStage(Stage primaryStage) {
@@ -117,6 +120,24 @@ public class TwitterBotUI extends Application {
 				switchSceneToGrid(primaryStage);
 			}
 		});
+	}
+	
+	private void setReadApiValuesButtonAction() {
+		readApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				getApiValuesFromFile();
+				setApiValues();
+			}
+		});
+	}
+	
+	private void getApiValuesFromFile() {
+		ReadAPIValuesFromFile apiValueFileReader = new ReadAPIValuesFromFile("twitter-api-values/api-values.txt");
+		apiValueFileReader.tryTtoReadFromFile();
+		String apiKeyFromFile = apiValueFileReader.getAPIKey();
+		String apiSecretFromFile = apiValueFileReader.getAPISecret();
+		apiKeyInputField.setText(apiKeyFromFile);
+		apiSecretInputField.setText(apiSecretFromFile);
 	}
 	
 	private void setApiValues() {
