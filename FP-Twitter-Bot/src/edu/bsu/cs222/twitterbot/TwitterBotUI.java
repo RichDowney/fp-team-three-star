@@ -24,6 +24,7 @@ public class TwitterBotUI extends Application {
 	private GridPane grid = new GridPane();
 	private TextField apiKeyInputField = new TextField();
 	private TextField apiSecretInputField = new TextField();
+	private TextField verifyURLOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
 	private Button postTweetButton = new Button("Post Tweet");
@@ -53,19 +54,22 @@ public class TwitterBotUI extends Application {
 	private void addtoGrid() {
 		grid.add(apiKeyInputField, 1, 0);
 		grid.add(apiSecretInputField, 1, 1);
-		grid.add(tokenVerifierInputField, 1, 2);
-		grid.add(tweetTextInputField, 1, 3);
-		grid.add(postTweetButton, 1, 4);
-		grid.add(getVerifyURLButton, 0, 4);
+		grid.add(verifyURLOutputField, 1, 2);
+		grid.add(tokenVerifierInputField, 1, 3);
+		grid.add(tweetTextInputField, 1, 4);
+		grid.add(postTweetButton, 1, 5);
+		grid.add(getVerifyURLButton, 0, 2);
 		grid.add(apiKeyLabel, 0, 0);
 		grid.add(apiSecretLabel, 0, 1);
-		grid.add(tokenVerifierLabel, 0, 2);
-		grid.add(tweetTextLabel, 0, 3);
+		grid.add(tokenVerifierLabel, 0, 3);
+		grid.add(tweetTextLabel, 0, 4);
 	}
 
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
 		apiSecretInputField.setPromptText("Paste in API Secret");
+		verifyURLOutputField.setPromptText("Goto for Verify Code");
+		verifyURLOutputField.setEditable(false);
 		tokenVerifierInputField.setPromptText("Paste in Verify Code");
 		tweetTextInputField.setPromptText("Tweet limited to 140 Characters");
 		tweetTextInputField.setPrefRowCount(5);
