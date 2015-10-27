@@ -16,7 +16,7 @@ public class APIValueFileWriter {
 		this.apiSecret = apiSecret;
 	}
 
-	public void tryToWriteToJsonFile() throws IOException {
+	public void tryToWriteToJsonFile() {
 		try {
 			writeToJsonFile();
 		} catch (IOException e) {
