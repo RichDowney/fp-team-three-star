@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class ReadAPIValuesFromFileTest {
 	
-	private ReadAPIValuesFromFile apiValueReader = new ReadAPIValuesFromFile("test-assets/api-values.txt");
+	private ReadAPIValuesFromFile apiValueReader = new ReadAPIValuesFromFile("test-assets/test-api-values.txt");
 	
 	@Before
 	public void testSetUp() {
