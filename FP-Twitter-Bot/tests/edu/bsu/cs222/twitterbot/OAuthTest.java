@@ -12,7 +12,8 @@ public class OAuthTest {
 	@Test
 	public void createOAuthServiceTest(){
 		OAuth oAuth = new OAuth(this.apiKey, this.apiSecret);
-		OAuthService service = oAuth.createOAuthService();
+		oAuth.createOAuthService();
+		OAuthService service = oAuth.getOAuthService();
 		assertTrue(service != null);
 	}
 }
