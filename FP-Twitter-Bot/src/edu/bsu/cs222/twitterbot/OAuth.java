@@ -29,6 +29,7 @@ public class OAuth {
 				.build();
 	}
 	
+	
 	public void createRequestToken(){
 		this.requestToken = service.getRequestToken();
 	}
@@ -49,4 +50,7 @@ public class OAuth {
 		return this.service;
 	}
 	
+	public Token getAccessToken(){
+		return this.accessToken;
+	}
 }
