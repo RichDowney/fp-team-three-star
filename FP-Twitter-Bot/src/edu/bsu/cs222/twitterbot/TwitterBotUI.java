@@ -20,6 +20,9 @@ public class TwitterBotUI extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	private OAuth oAuth;
+	private String authorizationUrl;
 
 	private GridPane grid = new GridPane();
 	private TextField apiKeyInputField = new TextField();
@@ -82,7 +85,36 @@ public class TwitterBotUI extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
+		setGetVerifyURLButtonAction();
 		setPostTweetButtonAction();
+	}
+	
+	private void setGetVerifyURLButtonAction() {
+		getVerifyURLButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				generateAuthorizationUrl();
+			}
+		});
+	}
+	
+	private void generateAuthorizationUrl() {
+		createOAuthInstance();
+		oAuth.createOAuthService();
+		oAuth.createRequestToken();
+		oAuth.createAuthorizationUrl();
+		displayAuthorizationUrl();
+	}
+	
+	private void createOAuthInstance() {
+		String apiKey = apiKeyInputField.getText();
+		String apiSecret = apiSecretInputField.getText();
+		oAuth = new OAuth(apiKey, apiSecret);
+	}
+	
+	private void displayAuthorizationUrl() {
+		String authorizationUrl = oAuth.getAuthorizationUrl();
+		verifyURLOutputField.setText(authorizationUrl);
+		
 	}
 
 	private void setPostTweetButtonAction() {
