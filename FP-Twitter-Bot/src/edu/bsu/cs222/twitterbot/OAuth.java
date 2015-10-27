@@ -45,4 +45,8 @@ public class OAuth {
 		this.accessToken = service.getAccessToken(requestToken, verifier);
 	}
 	
+	public OAuthService getOAuthService(){
+		return this.service;
+	}
+	
 }
