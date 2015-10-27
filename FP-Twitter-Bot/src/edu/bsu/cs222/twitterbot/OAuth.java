@@ -50,7 +50,7 @@ public class OAuth {
 		return this.service;
 	}
 	
-	public String authorizationUrl(){
+	public String getAuthorizationUrl(){
 		return this.authorizationUrl;
 	}
 	
