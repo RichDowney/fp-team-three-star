@@ -52,7 +52,7 @@ public class TwitterBotUI extends Application {
 		setGrid(apiGrid);
 		addtoApiGrid();
 		setGrid(tweetPostGrid);
-		addtoGrid();
+		addtoTweetPostGrid();
 		configureTextFields();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
@@ -76,7 +76,7 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiNextButton, 0, 3);
 	}
 
-	private void addtoGrid() {
+	private void addtoTweetPostGrid() {
 		tweetPostGrid.add(apiKeyInputField, 1, 0);
 		tweetPostGrid.add(apiSecretInputField, 1, 1);
 		tweetPostGrid.add(authorizationUrlOutputField, 1, 2);
