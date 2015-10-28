@@ -21,11 +21,11 @@ public class TwitterBotUI extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	private String apiKey;
 	private String apiSecret;
 	private OAuth oAuth;
-	
+
 	private GridPane apiGrid = new GridPane();
 	private TextField apiKeyInputField = new TextField();
 	private TextField apiSecretInputField = new TextField();
@@ -36,7 +36,7 @@ public class TwitterBotUI extends Application {
 	private Button writeApiValuesButton = new Button("Save API Values");
 	private Scene apiScene = new Scene(apiGrid);
 
-	private GridPane grid = new GridPane();
+	private GridPane tweetPostGrid = new GridPane();
 	private TextField authorizationUrlOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
@@ -45,14 +45,14 @@ public class TwitterBotUI extends Application {
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
-	private Scene scene = new Scene(grid);
+	private Scene tweetPostScene = new Scene(tweetPostGrid);
 
 	@Override
 	public void start(Stage primaryStage) {
-		setGrid(grid);
-		addtoGrid();
 		setGrid(apiGrid);
 		addtoApiGrid();
+		setGrid(tweetPostGrid);
+		addtoGrid();
 		configureTextFields();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
@@ -66,21 +66,6 @@ public class TwitterBotUI extends Application {
 		grid.setPadding(new Insets(30, 30, 30, 30));
 	}
 
-	private void addtoGrid() {
-		grid.add(apiKeyInputField, 1, 0);
-		grid.add(apiSecretInputField, 1, 1);
-		grid.add(authorizationUrlOutputField, 1, 2);
-		grid.add(tokenVerifierInputField, 1, 3);
-		grid.add(tweetTextInputField, 1, 4);
-		grid.add(postTweetButton, 1, 5);
-		grid.add(backToApiButton, 0, 5);
-		grid.add(getAuthorizationUrlButton, 0, 2);
-		grid.add(apiKeyLabel, 0, 0);
-		grid.add(apiSecretLabel, 0, 1);
-		grid.add(tokenVerifierLabel, 0, 3);
-		grid.add(tweetTextLabel, 0, 4);
-	}
-	
 	private void addtoApiGrid() {
 		apiGrid.add(apiKeyInputField, 1, 0);
 		apiGrid.add(apiSecretInputField, 1, 1);
@@ -89,6 +74,21 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(readApiValuesButton, 0, 2);
 		apiGrid.add(writeApiValuesButton, 1, 2);
 		apiGrid.add(apiNextButton, 0, 3);
+	}
+
+	private void addtoGrid() {
+		tweetPostGrid.add(apiKeyInputField, 1, 0);
+		tweetPostGrid.add(apiSecretInputField, 1, 1);
+		tweetPostGrid.add(authorizationUrlOutputField, 1, 2);
+		tweetPostGrid.add(tokenVerifierInputField, 1, 3);
+		tweetPostGrid.add(tweetTextInputField, 1, 4);
+		tweetPostGrid.add(postTweetButton, 1, 5);
+		tweetPostGrid.add(backToApiButton, 0, 5);
+		tweetPostGrid.add(getAuthorizationUrlButton, 0, 2);
+		tweetPostGrid.add(apiKeyLabel, 0, 0);
+		tweetPostGrid.add(apiSecretLabel, 0, 1);
+		tweetPostGrid.add(tokenVerifierLabel, 0, 3);
+		tweetPostGrid.add(tweetTextLabel, 0, 4);
 	}
 
 	private void configureTextFields() {
@@ -102,7 +102,7 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
 	}
-	
+
 	private void setButtonActions(Stage primaryStage) {
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
@@ -118,7 +118,7 @@ public class TwitterBotUI extends Application {
 		primaryStage.sizeToScene();
 		primaryStage.show();
 	}
-	
+
 	private void setApiNextButtonAction(Stage primaryStage) {
 		apiNextButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -127,7 +127,7 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-	
+
 	private void setReadApiValuesButtonAction() {
 		readApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -136,21 +136,7 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-	
-	private void getApiValuesFromFile() {
-		ReadAPIValuesFromFile apiValueFileReader = new ReadAPIValuesFromFile("twitter-api-values/api-values.txt");
-		apiValueFileReader.tryTtoReadFromFile();
-		String apiKeyFromFile = apiValueFileReader.getAPIKey();
-		String apiSecretFromFile = apiValueFileReader.getAPISecret();
-		apiKeyInputField.setText(apiKeyFromFile);
-		apiSecretInputField.setText(apiSecretFromFile);
-	}
-	
-	private void setApiValues() {
-		apiKey = apiKeyInputField.getText();
-		apiSecret = apiSecretInputField.getText();
-	}
-	
+
 	private void setWriteApiValuesButtonAction() {
 		writeApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -159,18 +145,7 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-	
-	private void writeApiValuesToFile() {
-		String apiKeyValueToWrite = apiKeyInputField.getText();
-		String apiSecretValueToWrite = apiSecretInputField.getText();
-		APIValueFileWriter apiValueFileWriter = new APIValueFileWriter(apiKeyValueToWrite, apiSecretValueToWrite);
-		apiValueFileWriter.tryToWriteToJsonFile();
-	}
-	
-	private void switchSceneToGrid(Stage primaryStage) {
-		primaryStage.setScene(scene);
-	}
-	
+
 	private void setGetAuthorizationUrlButtonAction() {
 		getAuthorizationUrlButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -178,25 +153,7 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-	
-	private void generateAuthorizationUrl() {
-		createOAuthInstance();
-		oAuth.createOAuthService();
-		oAuth.createRequestToken();
-		oAuth.createAuthorizationUrl();
-		displayAuthorizationUrl();
-	}
-	
-	private void createOAuthInstance() {
-		oAuth = new OAuth(apiKey, apiSecret);
-	}
-	
-	private void displayAuthorizationUrl() {
-		String authorizationUrl = oAuth.getAuthorizationUrl();
-		authorizationUrlOutputField.setText(authorizationUrl);
-		
-	}
-	
+
 	private void setPostTweetButtonAction() {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -213,9 +170,52 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
+
+	private void switchSceneToGrid(Stage primaryStage) {
+		primaryStage.setScene(tweetPostScene);
+	}
 	
 	private void switchSceneToApiScene(Stage primaryStage) {
 		primaryStage.setScene(apiScene);
+	}
+
+	private void setApiValues() {
+		apiKey = apiKeyInputField.getText();
+		apiSecret = apiSecretInputField.getText();
+	}
+
+	private void getApiValuesFromFile() {
+		ReadAPIValuesFromFile apiValueFileReader = new ReadAPIValuesFromFile("twitter-api-values/api-values.txt");
+		apiValueFileReader.tryTtoReadFromFile();
+		String apiKeyFromFile = apiValueFileReader.getAPIKey();
+		String apiSecretFromFile = apiValueFileReader.getAPISecret();
+		apiKeyInputField.setText(apiKeyFromFile);
+		apiSecretInputField.setText(apiSecretFromFile);
+	}
+
+	private void writeApiValuesToFile() {
+		String apiKeyValueToWrite = apiKeyInputField.getText();
+		String apiSecretValueToWrite = apiSecretInputField.getText();
+		APIValueFileWriter apiValueFileWriter = new APIValueFileWriter(apiKeyValueToWrite, apiSecretValueToWrite);
+		apiValueFileWriter.tryToWriteToJsonFile();
+	}
+
+	private void generateAuthorizationUrl() {
+		createOAuthInstance();
+		oAuth.createOAuthService();
+		oAuth.createRequestToken();
+		oAuth.createAuthorizationUrl();
+		displayAuthorizationUrl();
+	}
+
+	private void createOAuthInstance() {
+		oAuth = new OAuth(apiKey, apiSecret);
+	}
+
+	private void displayAuthorizationUrl() {
+		String authorizationUrl = oAuth.getAuthorizationUrl();
+		authorizationUrlOutputField.setText(authorizationUrl);
+
 	}
 
 	private void tryToWriteApiInputFieldsToFile() {
@@ -232,7 +232,7 @@ public class TwitterBotUI extends Application {
 		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
 		apiWriter.writeToJsonFile();
 	}
-	
+
 	private void tryToPostTweet() {
 		try {
 			postTweet();
@@ -240,7 +240,7 @@ public class TwitterBotUI extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void postTweet() throws UnsupportedEncodingException {
 		String tweetText = tweetTextInputField.getText();
 		String verifierCode = tokenVerifierInputField.getText();
