@@ -217,21 +217,6 @@ public class TwitterBotUI extends Application {
 
 	}
 
-	private void tryToWriteApiInputFieldsToFile() {
-		try {
-			writeApiInputFieldsToFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void writeApiInputFieldsToFile() throws IOException {
-		String apiKey = apiKeyInputField.getText();
-		String apiSecret = apiSecretInputField.getText();
-		APIValueFileWriter apiWriter = new APIValueFileWriter(apiKey, apiSecret);
-		apiWriter.writeToJsonFile();
-	}
-
 	private void tryToPostTweet() {
 		try {
 			postTweet();
