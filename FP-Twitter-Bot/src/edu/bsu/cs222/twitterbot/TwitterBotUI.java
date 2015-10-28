@@ -157,7 +157,6 @@ public class TwitterBotUI extends Application {
 	private void setPostTweetButtonAction() {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				tryToWriteApiInputFieldsToFile();
 				tryToPostTweet();
 			}
 		});
