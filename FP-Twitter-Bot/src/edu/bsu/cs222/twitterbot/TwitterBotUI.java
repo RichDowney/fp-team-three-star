@@ -77,16 +77,12 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void addtoTweetPostGrid() {
-		tweetPostGrid.add(apiKeyInputField, 1, 0);
-		tweetPostGrid.add(apiSecretInputField, 1, 1);
 		tweetPostGrid.add(authorizationUrlOutputField, 1, 2);
 		tweetPostGrid.add(tokenVerifierInputField, 1, 3);
 		tweetPostGrid.add(tweetTextInputField, 1, 4);
 		tweetPostGrid.add(postTweetButton, 1, 5);
 		tweetPostGrid.add(backToApiButton, 0, 5);
 		tweetPostGrid.add(getAuthorizationUrlButton, 0, 2);
-		tweetPostGrid.add(apiKeyLabel, 0, 0);
-		tweetPostGrid.add(apiSecretLabel, 0, 1);
 		tweetPostGrid.add(tokenVerifierLabel, 0, 3);
 		tweetPostGrid.add(tweetTextLabel, 0, 4);
 	}
