@@ -1,1 +1,1 @@
-{"apiKey":"","apiSecret":""}
+{"apiKey":"GdiOaLYzitCeCw0yrcqC1YXfP","apiSecret":"bwtcAcA4kGSkIphO1eqkwANLzahgZ2Z1INmKnfMc8kfgrCmhc6"}

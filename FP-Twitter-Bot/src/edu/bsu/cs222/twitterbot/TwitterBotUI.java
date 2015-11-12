@@ -3,6 +3,8 @@ package edu.bsu.cs222.twitterbot;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.json.simple.parser.ParseException;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -146,8 +148,23 @@ public class TwitterBotUI extends Application {
 		getAuthorizationUrlButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				generateAuthorizationUrl();
+				try {
+					getGiphy();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
+	}
+	
+	private void getGiphy() throws ParseException, IOException {
+		GiphyConnection giphyConnection = new  GiphyConnection("cat");
+		giphyConnection.connectToWikipedia();
+		giphyConnection.parseConnectionJSON();
 	}
 
 	private void setPostTweetButtonAction() {
