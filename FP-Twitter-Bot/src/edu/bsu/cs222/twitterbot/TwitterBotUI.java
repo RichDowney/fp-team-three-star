@@ -3,6 +3,7 @@ package edu.bsu.cs222.twitterbot;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import javafx.application.Application;
@@ -164,7 +165,9 @@ public class TwitterBotUI extends Application {
 	private void getGiphy() throws ParseException, IOException {
 		GiphyConnection giphyConnection = new  GiphyConnection("cat");
 		giphyConnection.connectToWikipedia();
-		giphyConnection.parseConnectionJSON();
+		JSONObject whatever = giphyConnection.parseConnectionJSON();
+		GiphyJSONParser giphyParser = new  GiphyJSONParser(whatever);
+		giphyParser.giphyParser();
 	}
 
 	private void setPostTweetButtonAction() {
