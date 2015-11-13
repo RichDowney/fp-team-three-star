@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class TwitterBotUI extends Application {
@@ -43,6 +44,8 @@ public class TwitterBotUI extends Application {
 	private TextField authorizationUrlOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
+	private HBox hbButtons = new HBox();
+	private Button gifButton = new Button("Get Gif");
 	private Button postTweetButton = new Button("Post Tweet");
 	private Button backToApiButton = new Button("Previous");
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
@@ -67,6 +70,7 @@ public class TwitterBotUI extends Application {
 		grid.setHgap(15);
 		grid.setVgap(15);
 		grid.setPadding(new Insets(30, 30, 30, 30));
+		hbButtons.setSpacing(10.0);
 	}
 
 	private void addtoApiGrid() {
@@ -83,11 +87,12 @@ public class TwitterBotUI extends Application {
 		tweetPostGrid.add(authorizationUrlOutputField, 1, 2);
 		tweetPostGrid.add(tokenVerifierInputField, 1, 3);
 		tweetPostGrid.add(tweetTextInputField, 1, 4);
-		tweetPostGrid.add(postTweetButton, 1, 5);
 		tweetPostGrid.add(backToApiButton, 0, 5);
 		tweetPostGrid.add(getAuthorizationUrlButton, 0, 2);
 		tweetPostGrid.add(tokenVerifierLabel, 0, 3);
 		tweetPostGrid.add(tweetTextLabel, 0, 4);
+		hbButtons.getChildren().addAll (gifButton, postTweetButton);
+		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
 	}
 
 	private void configureTextFields() {
@@ -108,6 +113,7 @@ public class TwitterBotUI extends Application {
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
+		setGifButtonAction();
 		setPostTweetButtonAction();
 	}
 
@@ -149,25 +155,16 @@ public class TwitterBotUI extends Application {
 		getAuthorizationUrlButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				generateAuthorizationUrl();
-				try {
-					getGiphy();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		});
 	}
 	
-	private void getGiphy() throws ParseException, IOException {
-		GiphyConnection giphyConnection = new  GiphyConnection("cat");
-		giphyConnection.connectToWikipedia();
-		JSONObject whatever = giphyConnection.parseConnectionJSON();
-		GiphyJSONParser giphyParser = new  GiphyJSONParser(whatever);
-		giphyParser.giphyParser();
+	private void setGifButtonAction() {
+		gifButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tryToGenerateGif();
+			}
+		});
 	}
 
 	private void setPostTweetButtonAction() {
@@ -231,6 +228,22 @@ public class TwitterBotUI extends Application {
 		String authorizationUrl = oAuth.getAuthorizationUrl();
 		authorizationUrlOutputField.setText(authorizationUrl);
 
+	}
+	
+	private void tryToGenerateGif() {
+		try {
+			generateGif();
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void generateGif() throws ParseException, IOException {
+		GiphyConnection giphyConnection = new  GiphyConnection("cat");
+		giphyConnection.connectToWikipedia();
+		JSONObject whatever = giphyConnection.parseConnectionJSON();
+		GiphyJSONParser giphyParser = new  GiphyJSONParser(whatever);
+		giphyParser.giphyParser();
 	}
 
 	private void tryToPostTweet() {
