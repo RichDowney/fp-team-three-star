@@ -3,7 +3,10 @@ package edu.bsu.cs222.twitterbot;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import javax.swing.event.ChangeListener;
+
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -220,14 +223,29 @@ public class TwitterBotUI extends Application {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void postTweet() throws UnsupportedEncodingException {
 		String tweetText = tweetTextInputField.getText();
+		addTextLimiter(tweetTextInputField, tweetLimit);
 		String verifierCode = tokenVerifierInputField.getText();
 		oAuth.createVerifier(verifierCode);
 		oAuth.createAccessToken();
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
+	}
+	
+	private int tweetLimit = 140;
+	
+	public static void addTextLimiter(final TextArea tweetTextInputField, final int maxLength) {
+	    tweetTextInputField.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+	            if (tf.getText().length() > maxLength) {
+	                String s = tf.getText().substring(0, maxLength);
+	                tf.setText(s);
+	            }
+	        }
+	    });
 	}
 
 }
