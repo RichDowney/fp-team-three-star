@@ -16,16 +16,16 @@ public class GiphyConnection {
 
 	}
 
-	private String titleParam;
+	private String giphySearchParam;
 	private URLConnection connection;
 	private JSONParser jsonParser = new JSONParser();
 
-	public GiphyConnection(String titleParam) {
-		this.titleParam = titleParam;
+	public GiphyConnection(String giphySearchParam) {
+		this.giphySearchParam = giphySearchParam;
 	}
 
 	public URLConnection connectToWikipedia() throws IOException {
-		String encodedTitleParam = URLEncoder.encode(this.titleParam, "UTF-8");
+		String encodedTitleParam = URLEncoder.encode(this.giphySearchParam, "UTF-8");
 		URL url = new URL("http://api.giphy.com/v1/gifs/random?tag=" + encodedTitleParam + "&api_key=dc6zaTOxFJmzC&limit=1");
 		connection = url.openConnection();
 		connection.setRequestProperty("User-Agent",
@@ -39,7 +39,6 @@ public class GiphyConnection {
 	public JSONObject parseConnectionJSON() throws ParseException, IOException {
 		InputStreamReader inputReader = new InputStreamReader(connection.getInputStream());
 		JSONObject jsonObject = (JSONObject) jsonParser.parse(inputReader);
-		System.out.print(jsonObject);
 		return jsonObject;
 	}
 }
