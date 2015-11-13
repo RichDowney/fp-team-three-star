@@ -2,6 +2,7 @@ package edu.bsu.cs222.twitterbot;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLConnection;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -234,16 +235,16 @@ public class TwitterBotUI extends Application {
 		try {
 			generateGif();
 		} catch (ParseException | IOException e) {
-			e.printStackTrace();
+			tweetTextInputField.setText("Error Getting The Gif URL");
 		}
 	}
 	
 	private void generateGif() throws ParseException, IOException {
 		GiphyConnection giphyConnection = new  GiphyConnection("cat");
-		giphyConnection.connectToWikipedia();
-		JSONObject whatever = giphyConnection.parseConnectionJSON();
-		GiphyJSONParser giphyParser = new  GiphyJSONParser(whatever);
-		giphyParser.giphyParser();
+		URLConnection  connection = giphyConnection.connectToGiphy();
+		GiphyJSONParser giphyParser = new GiphyJSONParser(connection);
+		String gifURL = giphyParser.parseOutURL();
+		tweetTextInputField.setText(gifURL);
 	}
 
 	private void tryToPostTweet() {
