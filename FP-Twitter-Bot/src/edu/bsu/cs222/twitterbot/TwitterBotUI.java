@@ -1,11 +1,11 @@
 package edu.bsu.cs222.twitterbot;
 
 import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
 
-import javax.swing.event.ChangeListener;
-
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,6 +49,7 @@ public class TwitterBotUI extends Application {
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene tweetPostScene = new Scene(tweetPostGrid);
+	private static final int tweetLimit = 140;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -59,8 +60,21 @@ public class TwitterBotUI extends Application {
 		configureTextFields();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
+		tweetTextInputField.lengthProperty().addListener(new ChangeListener<Number>() {
 
+	public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		if (newValue.intValue() > oldValue.intValue()) {
+			// Check if the new character is greater than LIMIT
+			if (tweetTextInputField.getText().length() >= tweetLimit) {
+
+				// if it's 11th character then just setText to previous
+				// one
+				tweetTextInputField.setText(tweetTextInputField.getText().substring(0, tweetLimit));
+			}
+		}
 	}
+
+		});}
 
 	private void setGrid(GridPane grid) {
 		grid.setAlignment(Pos.CENTER);
@@ -172,7 +186,7 @@ public class TwitterBotUI extends Application {
 	private void switchSceneToGrid(Stage primaryStage) {
 		primaryStage.setScene(tweetPostScene);
 	}
-	
+
 	private void switchSceneToApiScene(Stage primaryStage) {
 		primaryStage.setScene(apiScene);
 	}
@@ -223,29 +237,15 @@ public class TwitterBotUI extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void postTweet() throws UnsupportedEncodingException {
 		String tweetText = tweetTextInputField.getText();
-		addTextLimiter(tweetTextInputField, tweetLimit);
+
 		String verifierCode = tokenVerifierInputField.getText();
 		oAuth.createVerifier(verifierCode);
 		oAuth.createAccessToken();
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
-	}
-	
-	private int tweetLimit = 140;
-	
-	public static void addTextLimiter(final TextArea tweetTextInputField, final int maxLength) {
-	    tweetTextInputField.textProperty().addListener(new ChangeListener<String>() {
-	        @Override
-	        public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
-	            if (tf.getText().length() > maxLength) {
-	                String s = tf.getText().substring(0, maxLength);
-	                tf.setText(s);
-	            }
-	        }
-	    });
 	}
 
 }
