@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import javafx.application.Application;

@@ -21,7 +21,6 @@ public class GiphyJSONParser {
 		JSONObject connectionObject = parseConnectionJSON();
 		JSONObject dataObject = (JSONObject) connectionObject.get("data");
 		String url =  (String) dataObject.get("url");
-		System.out.println(url);
 		return url;
 	}
 	
