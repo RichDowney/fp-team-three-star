@@ -57,24 +57,11 @@ public class TwitterBotUI extends Application {
 		addtoApiGrid();
 		setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
+		configureTweetCharacterLimit();
 		configureTextFields();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
-		tweetTextInputField.lengthProperty().addListener(new ChangeListener<Number>() {
-
-	public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		if (newValue.intValue() > oldValue.intValue()) {
-			// Check if the new character is greater than LIMIT
-			if (tweetTextInputField.getText().length() >= tweetLimit) {
-
-				// if it's 11th character then just setText to previous
-				// one
-				tweetTextInputField.setText(tweetTextInputField.getText().substring(0, tweetLimit));
-			}
-		}
 	}
-
-		});}
 
 	private void setGrid(GridPane grid) {
 		grid.setAlignment(Pos.CENTER);
@@ -102,6 +89,18 @@ public class TwitterBotUI extends Application {
 		tweetPostGrid.add(getAuthorizationUrlButton, 0, 2);
 		tweetPostGrid.add(tokenVerifierLabel, 0, 3);
 		tweetPostGrid.add(tweetTextLabel, 0, 4);
+	}
+
+	private void configureTweetCharacterLimit() {
+		tweetTextInputField.lengthProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				if (newValue.intValue() > oldValue.intValue()) {
+					if (tweetTextInputField.getText().length() >= tweetLimit) {
+						tweetTextInputField.setText(tweetTextInputField.getText().substring(0, tweetLimit));
+					}
+				}
+			}
+		});
 	}
 
 	private void configureTextFields() {
