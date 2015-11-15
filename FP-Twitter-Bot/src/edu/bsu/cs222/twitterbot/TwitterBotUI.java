@@ -1,12 +1,15 @@
 package edu.bsu.cs222.twitterbot;
 
 import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 
 import org.json.simple.parser.ParseException;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -52,6 +55,7 @@ public class TwitterBotUI extends Application {
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene tweetPostScene = new Scene(tweetPostGrid);
+	private static final int tweetLimit = 140;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -59,10 +63,10 @@ public class TwitterBotUI extends Application {
 		addtoApiGrid();
 		setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
+		configureTweetCharacterLimit();
 		configureTextFields();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
-
 	}
 
 	private void setGrid(GridPane grid) {
@@ -93,6 +97,18 @@ public class TwitterBotUI extends Application {
 		tweetPostGrid.add(tweetTextLabel, 0, 4);
 		hbButtons.getChildren().addAll (gifButton, postTweetButton);
 		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
+	}
+
+	private void configureTweetCharacterLimit() {
+		tweetTextInputField.lengthProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				if (newValue.intValue() > oldValue.intValue()) {
+					if (tweetTextInputField.getText().length() >= tweetLimit) {
+						tweetTextInputField.setText(tweetTextInputField.getText().substring(0, tweetLimit));
+					}
+				}
+			}
+		});
 	}
 
 	private void configureTextFields() {
@@ -186,7 +202,7 @@ public class TwitterBotUI extends Application {
 	private void switchSceneToGrid(Stage primaryStage) {
 		primaryStage.setScene(tweetPostScene);
 	}
-	
+
 	private void switchSceneToApiScene(Stage primaryStage) {
 		primaryStage.setScene(apiScene);
 	}
@@ -256,6 +272,7 @@ public class TwitterBotUI extends Application {
 
 	private void postTweet() throws UnsupportedEncodingException {
 		String tweetText = tweetTextInputField.getText();
+
 		String verifierCode = tokenVerifierInputField.getText();
 		oAuth.createVerifier(verifierCode);
 		oAuth.createAccessToken();
