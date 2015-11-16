@@ -38,21 +38,26 @@ public class TwitterBotUI extends Application {
 	private TextField apiSecretInputField = new TextField();
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
-	private Button apiNextButton = new Button("Next");
+	private Button tokenNextButton = new Button("Next");
 	private Button readApiValuesButton = new Button("Get Saved API Values");
 	private Button writeApiValuesButton = new Button("Save API Values");
 	private Scene apiScene = new Scene(apiGrid);
 
-	private GridPane tweetPostGrid = new GridPane();
+	private GridPane tokenVerifierGrid = new GridPane();
 	private TextField authorizationUrlOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
+	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
+	private Button backToApiButton = new Button("Previous");
+	private Button tweetNextButton = new Button("Next");
+	private Label tokenVerifierLabel = new Label("Token Verifier Code");
+	private Scene tokenVerifierScene = new Scene(tokenVerifierGrid);
+
+	private GridPane tweetPostGrid = new GridPane();
 	private TextArea tweetTextInputField = new TextArea();
 	private HBox hbButtons = new HBox();
 	private Button gifButton = new Button("Get Gif");
 	private Button postTweetButton = new Button("Post Tweet");
-	private Button backToApiButton = new Button("Previous");
-	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
-	private Label tokenVerifierLabel = new Label("Token Verifier Code");
+	private Button backToTokenButton = new Button("Previous");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene tweetPostScene = new Scene(tweetPostGrid);
 	private static final int tweetLimit = 140;
@@ -61,6 +66,8 @@ public class TwitterBotUI extends Application {
 	public void start(Stage primaryStage) {
 		setGrid(apiGrid);
 		addtoApiGrid();
+		setGrid(tokenVerifierGrid);
+		addtoTokenVerifierGrid();
 		setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
 		configureTweetCharacterLimit();
@@ -84,19 +91,23 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiSecretLabel, 0, 1);
 		apiGrid.add(readApiValuesButton, 0, 2);
 		apiGrid.add(writeApiValuesButton, 1, 2);
-		apiGrid.add(apiNextButton, 0, 3);
+		apiGrid.add(tokenNextButton, 0, 3);
 	}
 
 	private void addtoTweetPostGrid() {
+		tweetPostGrid.add(tweetTextInputField, 1, 4);
+		tweetPostGrid.add(tweetTextLabel, 0, 4);
+		hbButtons.getChildren().addAll(gifButton, postTweetButton);
+		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
+	}
+
+	private void addtoTokenVerifierGrid() {
 		tweetPostGrid.add(authorizationUrlOutputField, 1, 2);
 		tweetPostGrid.add(tokenVerifierInputField, 1, 3);
-		tweetPostGrid.add(tweetTextInputField, 1, 4);
-		tweetPostGrid.add(backToApiButton, 0, 5);
+		tweetPostGrid.add(tweetNextButton, 1, 5);
 		tweetPostGrid.add(getAuthorizationUrlButton, 0, 2);
 		tweetPostGrid.add(tokenVerifierLabel, 0, 3);
-		tweetPostGrid.add(tweetTextLabel, 0, 4);
-		hbButtons.getChildren().addAll (gifButton, postTweetButton);
-		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
+		tweetPostGrid.add(backToApiButton, 0, 5);
 	}
 
 	private void configureTweetCharacterLimit() {
@@ -126,8 +137,10 @@ public class TwitterBotUI extends Application {
 	private void setButtonActions(Stage primaryStage) {
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
-		setApiNextButtonAction(primaryStage);
+		setTokenNextButtonAction(primaryStage);
+		setTweetNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
+		setBackToTokenButtonAction(primaryStage);
 		setBackToApiButtonAction(primaryStage);
 		setGifButtonAction();
 		setPostTweetButtonAction();
@@ -140,11 +153,20 @@ public class TwitterBotUI extends Application {
 		primaryStage.show();
 	}
 
-	private void setApiNextButtonAction(Stage primaryStage) {
-		apiNextButton.setOnAction(new EventHandler<ActionEvent>() {
+	private void setTweetNextButtonAction(Stage primaryStage) {
+		tweetNextButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				setApiValues();
-				switchSceneToGrid(primaryStage);
+				switchSceneToTweetScene(primaryStage);
+			}
+		});
+	}
+
+	private void setTokenNextButtonAction(Stage primaryStage) {
+		tokenNextButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				setApiValues();
+				switchSceneToTokenScene(primaryStage);
 			}
 		});
 	}
@@ -174,7 +196,7 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-	
+
 	private void setGifButtonAction() {
 		gifButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -199,12 +221,24 @@ public class TwitterBotUI extends Application {
 		});
 	}
 
-	private void switchSceneToGrid(Stage primaryStage) {
-		primaryStage.setScene(tweetPostScene);
+	private void setBackToTokenButtonAction(Stage primaryStage) {
+		backToTokenButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToTokenScene(primaryStage);
+			}
+		});
 	}
 
 	private void switchSceneToApiScene(Stage primaryStage) {
 		primaryStage.setScene(apiScene);
+	}
+
+	private void switchSceneToTokenScene(Stage primaryStage) {
+		primaryStage.setScene(tokenVerifierScene);
+	}
+
+	private void switchSceneToTweetScene(Stage primaryStage) {
+		primaryStage.setScene(tweetPostScene);
 	}
 
 	private void setApiValues() {
@@ -245,7 +279,7 @@ public class TwitterBotUI extends Application {
 		authorizationUrlOutputField.setText(authorizationUrl);
 
 	}
-	
+
 	private void tryToGenerateGif() {
 		try {
 			generateGif();
@@ -253,10 +287,10 @@ public class TwitterBotUI extends Application {
 			tweetTextInputField.setText("Error Getting The Gif URL");
 		}
 	}
-	
+
 	private void generateGif() throws ParseException, IOException {
-		GiphyConnection giphyConnection = new  GiphyConnection("cat");
-		URLConnection  connection = giphyConnection.connectToGiphy();
+		GiphyConnection giphyConnection = new GiphyConnection("cat");
+		URLConnection connection = giphyConnection.connectToGiphy();
 		GiphyJSONParser giphyParser = new GiphyJSONParser(connection);
 		String gifURL = giphyParser.parseOutURL();
 		tweetTextInputField.setText(gifURL);
