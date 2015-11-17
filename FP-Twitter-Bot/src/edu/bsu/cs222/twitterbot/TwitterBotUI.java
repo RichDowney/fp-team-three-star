@@ -114,10 +114,10 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void addtoApiGrid() {
-		apiGrid.add(userNameInputField, 1, 1);
+		apiGrid.add(userNameInputField, 1, 0);
 		apiGrid.add(apiKeyInputField, 1, 1);
 		apiGrid.add(apiSecretInputField, 1, 2);
-		apiGrid.add(userNameLabel, 0, 1);
+		apiGrid.add(userNameLabel, 0, 0);
 		apiGrid.add(apiKeyLabel, 0, 1);
 		apiGrid.add(apiSecretLabel, 0, 2);
 		apiGrid.add(readApiValuesButton, 0, 3);
