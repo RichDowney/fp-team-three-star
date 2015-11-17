@@ -36,6 +36,7 @@ public class TwitterBotUI extends Application {
 
 	private String apiKey;
 	private String apiSecret;
+	private JSONObject usersJSONObject;
 	private OAuth oAuth;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
@@ -48,8 +49,10 @@ public class TwitterBotUI extends Application {
 	private Scene startScene = new Scene(startGrid);
 
 	private GridPane apiGrid = new GridPane();
+	private TextField userNameInputField = new TextField();
 	private TextField apiKeyInputField = new TextField();
 	private TextField apiSecretInputField = new TextField();
+	private Label userNameLabel = new Label("Username");
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
 	private Button apiBackButton = new Button("Previous");
@@ -111,14 +114,16 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void addtoApiGrid() {
-		apiGrid.add(apiKeyInputField, 1, 0);
-		apiGrid.add(apiSecretInputField, 1, 1);
-		apiGrid.add(apiKeyLabel, 0, 0);
-		apiGrid.add(apiSecretLabel, 0, 1);
-		apiGrid.add(readApiValuesButton, 0, 2);
-		apiGrid.add(writeApiValuesButton, 1, 2);
-		apiGrid.add(apiBackButton, 0, 3);
-		apiGrid.add(apiNextButton, 1, 3);
+		apiGrid.add(userNameInputField, 1, 1);
+		apiGrid.add(apiKeyInputField, 1, 1);
+		apiGrid.add(apiSecretInputField, 1, 2);
+		apiGrid.add(userNameLabel, 0, 1);
+		apiGrid.add(apiKeyLabel, 0, 1);
+		apiGrid.add(apiSecretLabel, 0, 2);
+		apiGrid.add(readApiValuesButton, 0, 3);
+		apiGrid.add(writeApiValuesButton, 1, 4);
+		apiGrid.add(apiBackButton, 0, 4);
+		apiGrid.add(apiNextButton, 1, 4);
 	}
 	private void addToVerifyGrid() {
 		verifyGrid.add(authorizationUrlOutputField, 1, 0);
@@ -164,9 +169,8 @@ public class TwitterBotUI extends Application {
 		userSelector.getItems().add("None");
 		userSelector.setValue("None");
 		ParseFromJSONFile usersParser = new ParseFromJSONFile("twitter-values/users.json");
-		usersParser.tryTtoReadFromFile();
-		JSONObject fileObject = usersParser.tryTtoReadFromFile();
-		for(Iterator iterator = fileObject.keySet().iterator(); iterator.hasNext();) {
+		usersJSONObject = usersParser.tryTtoReadFromFile();
+		for(Iterator iterator = usersJSONObject.keySet().iterator(); iterator.hasNext();) {
 		    String key = (String) iterator.next();
 		    userSelector.getItems().add(key);
 		}
