@@ -16,6 +16,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -170,6 +172,7 @@ public class TwitterBotUI extends Application {
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
+		setSaveInfoButtonAction();
 		setGifButtonAction();
 		setPostTweetButtonAction();
 	}
@@ -256,6 +259,14 @@ public class TwitterBotUI extends Application {
 		});
 	}
 	
+	private void setSaveInfoButtonAction() {
+		saveInfoButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tryToSaveInfo();
+			}
+		});
+	}
+	
 	private void switchSceneToStartScene(Stage primaryStage) {
 		primaryStage.setScene(startScene);
 	}
@@ -305,6 +316,25 @@ public class TwitterBotUI extends Application {
 		String authorizationUrl = oAuth.getAuthorizationUrl();
 		authorizationUrlOutputField.setText(authorizationUrl);
 
+	}
+	
+	private void tryToSaveInfo() {
+		try {
+			saveInfo();
+		} catch (Exception e) {
+			alertUserToSaveError();
+		}
+	}
+	
+	private void saveInfo() throws Exception {
+	}
+	
+	private void alertUserToSaveError(){
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Something went wrong!");
+		alert.setContentText("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
+		alert.showAndWait();
 	}
 	
 	private void tryToGenerateGif() {
