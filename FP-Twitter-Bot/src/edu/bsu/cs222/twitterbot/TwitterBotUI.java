@@ -171,9 +171,12 @@ public class TwitterBotUI extends Application {
 		userSelector.setValue("None");
 		ParseFromJSONFile usersParser = new ParseFromJSONFile("twitter-values/users.json");
 		usersJSONObject = usersParser.tryTtoReadFromFile();
+		if(usersJSONObject != null){
+			
 		for(Iterator iterator = usersJSONObject.keySet().iterator(); iterator.hasNext();) {
 		    String key = (String) iterator.next();
 		    userSelector.getItems().add(key);
+		}
 		}
 	}
 
