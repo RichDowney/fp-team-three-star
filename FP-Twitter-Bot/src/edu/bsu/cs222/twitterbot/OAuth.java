@@ -46,6 +46,10 @@ public class OAuth {
 		this.accessToken = service.getAccessToken(requestToken, verifier);
 	}
 	
+	public void createAccessTokenFromValues(String tokenString, String tokenSecret){
+		this.accessToken = new Token(tokenString, tokenSecret);
+	}
+	
 	public OAuthService getOAuthService(){
 		return this.service;
 	}

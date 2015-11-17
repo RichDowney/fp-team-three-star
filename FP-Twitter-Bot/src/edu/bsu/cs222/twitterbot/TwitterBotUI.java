@@ -38,6 +38,7 @@ public class TwitterBotUI extends Application {
 	private String apiKey;
 	private String apiSecret;
 	private String selectedUser;
+	private ParseFromJSONFile usersParser;
 	private JSONObject usersJSONObject;
 	private OAuth oAuth;
 	
@@ -170,7 +171,7 @@ public class TwitterBotUI extends Application {
 	private void configureComboBox() {
 		userSelector.getItems().add("None");
 		userSelector.setValue("None");
-		ParseFromJSONFile usersParser = new ParseFromJSONFile("twitter-values/users.json");
+		usersParser = new ParseFromJSONFile("twitter-values/users.json");
 		usersJSONObject = usersParser.tryTtoReadFromFile();
 		if(usersJSONObject != null){
 			
@@ -329,8 +330,8 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void setApiValues() {
-		apiKey = apiKeyInputField.getText();
-		apiSecret = apiSecretInputField.getText();
+		apiKeyInputField.setText(apiKey);
+		apiSecretInputField.setText(apiSecret);
 	}
 
 	private void getApiValuesFromFile() {
@@ -338,8 +339,8 @@ public class TwitterBotUI extends Application {
 		JSONObject apiFileObject = apiValueFileReader.tryTtoReadFromFile();
 		String apiKeyFromFile = apiValueFileReader.parseOutObjectValue("apiKey", apiFileObject);
 		String apiSecretFromFile = apiValueFileReader.parseOutObjectValue("apiSecret", apiFileObject);
-		apiKeyInputField.setText(apiKeyFromFile);
-		apiSecretInputField.setText(apiSecretFromFile);
+		apiKey = apiKeyFromFile;
+		apiSecret = apiSecretFromFile;
 	}
 
 	private void writeApiValuesToFile() {
@@ -358,6 +359,8 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void createOAuthInstance() {
+		System.out.println(apiKey);
+		System.out.println(apiSecret);
 		oAuth = new OAuth(apiKey, apiSecret);
 	}
 
@@ -421,10 +424,14 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void postTweet() throws UnsupportedEncodingException {
+		getApiValuesFromFile();
+		createOAuthInstance();
+		oAuth.createOAuthService();
+		JSONObject userObject = usersParser.parseOutObject( selectedUser, usersJSONObject);
+		String tokenString = usersParser.parseOutObjectValue("tokenString", userObject);
+		String tokenSecret = usersParser.parseOutObjectValue("tokenSecret", userObject);
 		String tweetText = tweetTextInputField.getText();
-		String verifierCode = tokenVerifierInputField.getText();
-		oAuth.createVerifier(verifierCode);
-		oAuth.createAccessToken();
+		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
 	}
