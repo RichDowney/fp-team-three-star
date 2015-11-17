@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ReadAPIValuesFromFileTest {
+public class ParseFromJSONFileTest {
 	
 	private ParseFromJSONFile apiValueFileReader;
 	private JSONObject apiFileObject;
