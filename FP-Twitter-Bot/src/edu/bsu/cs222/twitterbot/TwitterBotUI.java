@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import javafx.application.Application;
@@ -213,10 +214,10 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void getApiValuesFromFile() {
-		ReadAPIValuesFromFile apiValueFileReader = new ReadAPIValuesFromFile("twitter-api-values/api-values.txt");
-		apiValueFileReader.tryTtoReadFromFile();
-		String apiKeyFromFile = apiValueFileReader.getAPIKey();
-		String apiSecretFromFile = apiValueFileReader.getAPISecret();
+		ParseFromJSONFile apiValueFileReader = new ParseFromJSONFile("twitter-api-values/api-values.txt");
+		JSONObject apiFileObject = apiValueFileReader.tryTtoReadFromFile();
+		String apiKeyFromFile = apiValueFileReader.parseOutObjectValue("apiKey", apiFileObject);
+		String apiSecretFromFile = apiValueFileReader.parseOutObjectValue("apiSecret", apiFileObject);
 		apiKeyInputField.setText(apiKeyFromFile);
 		apiSecretInputField.setText(apiSecretFromFile);
 	}

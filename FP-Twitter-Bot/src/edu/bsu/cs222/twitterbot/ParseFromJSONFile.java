@@ -8,36 +8,37 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class ReadAccessTokenValuesFromFile {
-	
-	private JSONObject tokenValueJSONObject;
+public class ParseFromJSONFile {
+	private JSONObject fileJSONObject;
 	private JSONParser parser = new JSONParser();
 	private String filePath;
 	
-	public ReadAccessTokenValuesFromFile(String filePath) {
+	public ParseFromJSONFile(String filePath) {
 		this.filePath = filePath;
 	}
 	
-	public void tryTtoReadFromFile() {
+	public JSONObject tryTtoReadFromFile() {
 		try {
 			readFromFile();
 		} catch (Exception e) {
-			e.printStackTrace();
+			this.fileJSONObject = null;
 		}
+		return this.fileJSONObject;
 	}
 
 	public void readFromFile() throws FileNotFoundException, IOException, ParseException {
 		Object fileObject = parser.parse(new FileReader(this.filePath));
-		this.tokenValueJSONObject = (JSONObject) fileObject;
+		this.fileJSONObject = (JSONObject) fileObject;
 	}
 	
-	public String getTokenString(){
-		String tokenString = (String) this.tokenValueJSONObject.get("tokenString");
-		return tokenString;
+	public String parseOutObjectValue(String key, JSONObject jsonObject) {
+		String parsedValue = (String) jsonObject.get(key);
+		return parsedValue;
 	}
 	
-	public String getTokenSecret(){
-		String tokenSecret = (String) this.tokenValueJSONObject.get("tokenSecret");
-		return tokenSecret;
+	public JSONObject parseOutObject(String key, JSONObject jsonObject) {
+		JSONObject parsedObject = (JSONObject) jsonObject.get(key);
+		return parsedObject;
 	}
+	
 }
