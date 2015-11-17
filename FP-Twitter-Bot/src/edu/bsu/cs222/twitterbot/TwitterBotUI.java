@@ -55,19 +55,22 @@ public class TwitterBotUI extends Application {
 	private Button writeApiValuesButton = new Button("Save API Values");
 	private Scene apiScene = new Scene(apiGrid);
 
-	private GridPane tweetPostGrid = new GridPane();
+	private GridPane verifyGrid = new GridPane();
 	private TextField authorizationUrlOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
-	private HBox hbButtons = new HBox();
-	private Button gifButton = new Button("Get Gif");
-	private Button postTweetButton = new Button("Post Tweet");
 	private Button backToApiButton = new Button("Previous");
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
+	private Scene verifyScene = new Scene(verifyGrid);
+	
+	private GridPane tweetPostGrid = new GridPane();
+	private HBox hbButtons = new HBox();
+	private Button gifButton = new Button("Get Gif");
+	private Button postTweetButton = new Button("Post Tweet");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene tweetPostScene = new Scene(tweetPostGrid);
-	private static final int tweetLimit = 140;
+	private final int tweetLimit = 140;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -75,6 +78,8 @@ public class TwitterBotUI extends Application {
 		addToStartGrid();
 		setGrid(apiGrid);
 		addtoApiGrid();
+		setGrid(verifyGrid);
+		addToVerifyGrid();
 		setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
 		configureTweetCharacterLimit();
@@ -111,14 +116,16 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiBackButton, 0, 3);
 		apiGrid.add(apiNextButton, 1, 3);
 	}
+	private void addToVerifyGrid() {
+		verifyGrid.add(authorizationUrlOutputField, 1, 2);
+		verifyGrid.add(tokenVerifierInputField, 1, 3);
+		verifyGrid.add(backToApiButton, 0, 5);
+		verifyGrid.add(getAuthorizationUrlButton, 0, 2);
+		verifyGrid.add(tokenVerifierLabel, 0, 3);
+	}
 
 	private void addtoTweetPostGrid() {
-		tweetPostGrid.add(authorizationUrlOutputField, 1, 2);
-		tweetPostGrid.add(tokenVerifierInputField, 1, 3);
 		tweetPostGrid.add(tweetTextInputField, 1, 4);
-		tweetPostGrid.add(backToApiButton, 0, 5);
-		tweetPostGrid.add(getAuthorizationUrlButton, 0, 2);
-		tweetPostGrid.add(tokenVerifierLabel, 0, 3);
 		tweetPostGrid.add(tweetTextLabel, 0, 4);
 		hbButtons.getChildren().addAll (gifButton, postTweetButton);
 		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
@@ -192,7 +199,7 @@ public class TwitterBotUI extends Application {
 		apiNextButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				setApiValues();
-				switchSceneToTweetScene(primaryStage);
+				switchSceneToVerifyScene(primaryStage);
 			}
 		});
 	}
@@ -251,8 +258,8 @@ public class TwitterBotUI extends Application {
 		primaryStage.setScene(startScene);
 	}
 
-	private void switchSceneToTweetScene(Stage primaryStage) {
-		primaryStage.setScene(tweetPostScene);
+	private void switchSceneToVerifyScene(Stage primaryStage) {
+		primaryStage.setScene(verifyScene);
 	}
 
 	private void switchSceneToApiScene(Stage primaryStage) {
