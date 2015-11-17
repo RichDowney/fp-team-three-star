@@ -49,6 +49,7 @@ public class TwitterBotUI extends Application {
 	private TextField apiSecretInputField = new TextField();
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
+	private Button apiBackButton = new Button("Back");
 	private Button apiNextButton = new Button("Next");
 	private Button readApiValuesButton = new Button("Get Saved API Values");
 	private Button writeApiValuesButton = new Button("Save API Values");
@@ -107,7 +108,8 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiSecretLabel, 0, 1);
 		apiGrid.add(readApiValuesButton, 0, 2);
 		apiGrid.add(writeApiValuesButton, 1, 2);
-		apiGrid.add(apiNextButton, 0, 3);
+		apiGrid.add(apiBackButton, 0, 3);
+		apiGrid.add(apiNextButton, 1, 3);
 	}
 
 	private void addtoTweetPostGrid() {
