@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-public class WriteAccessTokenValuesToFileTest extends ParseFromJSONFileTest {
+public class UserValueFileWritertest extends ParseFromJSONFileTest {
 	
 	@Test
 	public void createJSONObjectTest() {
