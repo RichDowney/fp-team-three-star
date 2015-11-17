@@ -8,12 +8,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class ReadAPIValuesFromFile {
+public class ParseFromJSONFile {
 	private JSONObject fileJSONObject;
 	private JSONParser parser = new JSONParser();
 	private String filePath;
 	
-	public ReadAPIValuesFromFile(String filePath) {
+	public ParseFromJSONFile(String filePath) {
 		this.filePath = filePath;
 	}
 	
