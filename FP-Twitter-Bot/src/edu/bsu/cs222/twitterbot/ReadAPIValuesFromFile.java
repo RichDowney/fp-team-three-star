@@ -17,12 +17,13 @@ public class ReadAPIValuesFromFile {
 		this.filePath = filePath;
 	}
 	
-	public void tryTtoReadFromFile() {
+	public JSONObject tryTtoReadFromFile() {
 		try {
 			readFromFile();
 		} catch (Exception e) {
-			e.printStackTrace();
+			this.fileJSONObject = null;
 		}
+		return this.fileJSONObject;
 	}
 
 	public void readFromFile() throws FileNotFoundException, IOException, ParseException {
@@ -30,13 +31,13 @@ public class ReadAPIValuesFromFile {
 		this.fileJSONObject = (JSONObject) fileObject;
 	}
 	
-	private String parseOutObjectValue(String key) {
-		String parsedValue = (String) this.fileJSONObject.get(key);
+	public String parseOutObjectValue(String key, JSONObject jsonObject) {
+		String parsedValue = (String) jsonObject.get(key);
 		return parsedValue;
 	}
 	
-	private JSONObject parseOutObject(String key) {
-		JSONObject parsedObject = (JSONObject) this.fileJSONObject.get(key);
+	public JSONObject parseOutObject(String key, JSONObject jsonObject) {
+		JSONObject parsedObject = (JSONObject) jsonObject.get(key);
 		return parsedObject;
 	}
 	
