@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.scribe.model.Token;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -339,6 +340,15 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void saveInfo() throws Exception {
+		String verifierCode = tokenVerifierInputField.getText();
+		oAuth.createVerifier(verifierCode);
+		oAuth.createAccessToken();
+		Token accessToken = oAuth.getAccessToken();
+		String tokenString = accessToken.getToken();
+		String tokenSecret = accessToken.getSecret();
+		String userName = userNameInputField.getText();
+		UserValueFileWriter userWriter = new UserValueFileWriter(userName, tokenString, tokenSecret);
+		userWriter.createJSONObject(usersJSONObject);
 	}
 	
 	private void alertUserToSaveError(){
