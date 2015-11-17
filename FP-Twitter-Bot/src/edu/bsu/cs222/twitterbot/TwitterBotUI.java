@@ -36,6 +36,11 @@ public class TwitterBotUI extends Application {
 	private OAuth oAuth;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
+	private Label userSelectorLabel = new Label("Select User To Tweet From");
+	private Label addNewUserLabel = new Label("Add A New User");
+	private Label startTweetingLabel = new Label("Start Tweeting Now");
+	private Button addNewUserButton = new Button("Add User");
+	private Button startTweetingButton = new Button("Start Tweeting");
 	private GridPane startGrid = new GridPane();
 	private Scene startScene = new Scene(startGrid);
 
@@ -87,7 +92,12 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void addToStartGrid() {
+		startGrid.add(userSelectorLabel, 0, 0);
 		startGrid.add(userSelector, 1, 0);
+		startGrid.add(addNewUserLabel, 0, 1);
+		startGrid.add(addNewUserButton, 1, 1);
+		startGrid.add(startTweetingLabel, 0, 2);
+		startGrid.add(startTweetingButton, 1, 2);
 	}
 
 	private void addtoApiGrid() {
