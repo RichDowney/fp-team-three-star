@@ -49,7 +49,7 @@ public class TwitterBotUI extends Application {
 	private TextField apiSecretInputField = new TextField();
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
-	private Button apiBackButton = new Button("Back");
+	private Button apiBackButton = new Button("Previous");
 	private Button apiNextButton = new Button("Next");
 	private Button readApiValuesButton = new Button("Get Saved API Values");
 	private Button writeApiValuesButton = new Button("Save API Values");
@@ -157,6 +157,7 @@ public class TwitterBotUI extends Application {
 		setStartTweetingButtonAction(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
+		setApiBackButtonAction(primaryStage);
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
@@ -175,6 +176,14 @@ public class TwitterBotUI extends Application {
 		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				switchSceneToApiScene(primaryStage);
+			}
+		});
+	}
+	
+	private void setApiBackButtonAction(Stage primaryStage) {
+		apiBackButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToStartScene(primaryStage);
 			}
 		});
 	}
@@ -236,6 +245,10 @@ public class TwitterBotUI extends Application {
 				switchSceneToApiScene(primaryStage);
 			}
 		});
+	}
+	
+	private void switchSceneToStartScene(Stage primaryStage) {
+		primaryStage.setScene(startScene);
 	}
 
 	private void switchSceneToTweetScene(Stage primaryStage) {
