@@ -37,6 +37,7 @@ public class TwitterBotUI extends Application {
 
 	private String apiKey;
 	private String apiSecret;
+	private String selectedUser;
 	private JSONObject usersJSONObject;
 	private OAuth oAuth;
 	
@@ -181,6 +182,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void setButtonActions(Stage primaryStage) {
+		setStartTweetingButton(primaryStage);
 		setAddNewUserButtonAction(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
@@ -198,6 +200,14 @@ public class TwitterBotUI extends Application {
 		primaryStage.setScene(startScene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
+	}
+	
+	private void setStartTweetingButton(Stage primaryStage) {
+		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToTweetScene(primaryStage);
+			}
+		});
 	}
 	
 	private void setAddNewUserButtonAction(Stage primaryStage) {
@@ -291,6 +301,23 @@ public class TwitterBotUI extends Application {
 	
 	private void switchSceneToStartScene(Stage primaryStage) {
 		primaryStage.setScene(startScene);
+	}
+	
+	private void switchSceneToTweetScene(Stage primaryStage) {
+		selectedUser = this.userSelector.getValue();
+		if (selectedUser.equals("None")){
+			alertUserToSelectUserName();
+		} else {
+			primaryStage.setScene(tweetPostScene);
+		}
+	}
+	
+	private void alertUserToSelectUserName(){
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText("Selected Username not valid");
+		alert.setContentText("You must select a username to start tweeting.");
+		alert.showAndWait();
 	}
 
 	private void switchSceneToVerifyScene(Stage primaryStage) {
