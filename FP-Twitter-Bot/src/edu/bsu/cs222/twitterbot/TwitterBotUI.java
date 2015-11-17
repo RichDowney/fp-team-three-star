@@ -122,7 +122,7 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiKeyLabel, 0, 1);
 		apiGrid.add(apiSecretLabel, 0, 2);
 		apiGrid.add(readApiValuesButton, 0, 3);
-		apiGrid.add(writeApiValuesButton, 1, 4);
+		apiGrid.add(writeApiValuesButton, 1, 3);
 		apiGrid.add(apiBackButton, 0, 4);
 		apiGrid.add(apiNextButton, 1, 4);
 	}
@@ -181,7 +181,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void setButtonActions(Stage primaryStage) {
-		setStartTweetingButtonAction(primaryStage);
+		setAddNewUserButtonAction(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
@@ -200,8 +200,8 @@ public class TwitterBotUI extends Application {
 		primaryStage.show();
 	}
 	
-	private void setStartTweetingButtonAction(Stage primaryStage) {
-		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
+	private void setAddNewUserButtonAction(Stage primaryStage) {
+		addNewUserButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				switchSceneToApiScene(primaryStage);
 			}
@@ -301,7 +301,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void getApiValuesFromFile() {
-		ParseFromJSONFile apiValueFileReader = new ParseFromJSONFile("twitter-api-values/api-values.txt");
+		ParseFromJSONFile apiValueFileReader = new ParseFromJSONFile("twitter-values/api-values.json");
 		JSONObject apiFileObject = apiValueFileReader.tryTtoReadFromFile();
 		String apiKeyFromFile = apiValueFileReader.parseOutObjectValue("apiKey", apiFileObject);
 		String apiSecretFromFile = apiValueFileReader.parseOutObjectValue("apiSecret", apiFileObject);
