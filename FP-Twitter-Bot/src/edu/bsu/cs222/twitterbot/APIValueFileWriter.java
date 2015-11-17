@@ -26,7 +26,7 @@ public class APIValueFileWriter {
 
 	public void writeToJsonFile() throws IOException {
 		JSONObject apiJsonObject = createJSONObject();
-		FileWriter file = new FileWriter("twitter-api-values/api-values.txt");
+		FileWriter file = new FileWriter("twitter-values/api-values.json");
 		file.write(apiJsonObject.toJSONString());
 		file.flush();
 		file.close();

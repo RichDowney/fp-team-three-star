@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
+import java.util.Iterator;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.scribe.model.Token;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +18,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -33,6 +37,7 @@ public class TwitterBotUI extends Application {
 
 	private String apiKey;
 	private String apiSecret;
+	private JSONObject usersJSONObject;
 	private OAuth oAuth;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
@@ -45,8 +50,10 @@ public class TwitterBotUI extends Application {
 	private Scene startScene = new Scene(startGrid);
 
 	private GridPane apiGrid = new GridPane();
+	private TextField userNameInputField = new TextField();
 	private TextField apiKeyInputField = new TextField();
 	private TextField apiSecretInputField = new TextField();
+	private Label userNameLabel = new Label("Username");
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
 	private Button apiBackButton = new Button("Previous");
@@ -108,14 +115,16 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void addtoApiGrid() {
-		apiGrid.add(apiKeyInputField, 1, 0);
-		apiGrid.add(apiSecretInputField, 1, 1);
-		apiGrid.add(apiKeyLabel, 0, 0);
-		apiGrid.add(apiSecretLabel, 0, 1);
-		apiGrid.add(readApiValuesButton, 0, 2);
-		apiGrid.add(writeApiValuesButton, 1, 2);
-		apiGrid.add(apiBackButton, 0, 3);
-		apiGrid.add(apiNextButton, 1, 3);
+		apiGrid.add(userNameInputField, 1, 0);
+		apiGrid.add(apiKeyInputField, 1, 1);
+		apiGrid.add(apiSecretInputField, 1, 2);
+		apiGrid.add(userNameLabel, 0, 0);
+		apiGrid.add(apiKeyLabel, 0, 1);
+		apiGrid.add(apiSecretLabel, 0, 2);
+		apiGrid.add(readApiValuesButton, 0, 3);
+		apiGrid.add(writeApiValuesButton, 1, 3);
+		apiGrid.add(apiBackButton, 0, 4);
+		apiGrid.add(apiNextButton, 1, 4);
 	}
 	private void addToVerifyGrid() {
 		verifyGrid.add(authorizationUrlOutputField, 1, 0);
@@ -158,18 +167,28 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void configureComboBox() {
-		userSelector.getItems().addAll("None");
+		userSelector.getItems().add("None");
 		userSelector.setValue("None");
+		ParseFromJSONFile usersParser = new ParseFromJSONFile("twitter-values/users.json");
+		usersJSONObject = usersParser.tryTtoReadFromFile();
+		if(usersJSONObject != null){
+			
+		for(Iterator iterator = usersJSONObject.keySet().iterator(); iterator.hasNext();) {
+		    String key = (String) iterator.next();
+		    userSelector.getItems().add(key);
+		}
+		}
 	}
 
 	private void setButtonActions(Stage primaryStage) {
-		setStartTweetingButtonAction(primaryStage);
+		setAddNewUserButtonAction(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
+		setSaveInfoButtonAction(primaryStage);
 		setGifButtonAction();
 		setPostTweetButtonAction();
 	}
@@ -181,8 +200,8 @@ public class TwitterBotUI extends Application {
 		primaryStage.show();
 	}
 	
-	private void setStartTweetingButtonAction(Stage primaryStage) {
-		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
+	private void setAddNewUserButtonAction(Stage primaryStage) {
+		addNewUserButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				switchSceneToApiScene(primaryStage);
 			}
@@ -256,6 +275,20 @@ public class TwitterBotUI extends Application {
 		});
 	}
 	
+	private void setSaveInfoButtonAction(Stage primaryStage) {
+		saveInfoButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tryToSaveInfo(primaryStage);
+			}
+		});
+	}
+	
+	private void switchSceneToStartSceneAfterSave(Stage primaryStage) {
+		String userName = userNameInputField.getText();
+		userSelector.getItems().add(userName);
+		primaryStage.setScene(startScene);
+	}
+	
 	private void switchSceneToStartScene(Stage primaryStage) {
 		primaryStage.setScene(startScene);
 	}
@@ -274,7 +307,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void getApiValuesFromFile() {
-		ParseFromJSONFile apiValueFileReader = new ParseFromJSONFile("twitter-api-values/api-values.txt");
+		ParseFromJSONFile apiValueFileReader = new ParseFromJSONFile("twitter-values/api-values.json");
 		JSONObject apiFileObject = apiValueFileReader.tryTtoReadFromFile();
 		String apiKeyFromFile = apiValueFileReader.parseOutObjectValue("apiKey", apiFileObject);
 		String apiSecretFromFile = apiValueFileReader.parseOutObjectValue("apiSecret", apiFileObject);
@@ -305,6 +338,35 @@ public class TwitterBotUI extends Application {
 		String authorizationUrl = oAuth.getAuthorizationUrl();
 		authorizationUrlOutputField.setText(authorizationUrl);
 
+	}
+	
+	private void tryToSaveInfo(Stage primaryStage) {
+		try {
+			saveInfo();
+			switchSceneToStartSceneAfterSave(primaryStage);
+		} catch (Exception e) {
+			alertUserToSaveError();
+		}
+	}
+	
+	private void saveInfo() throws Exception {
+		String verifierCode = tokenVerifierInputField.getText();
+		oAuth.createVerifier(verifierCode);
+		oAuth.createAccessToken();
+		Token accessToken = oAuth.getAccessToken();
+		String tokenString = accessToken.getToken();
+		String tokenSecret = accessToken.getSecret();
+		String userName = userNameInputField.getText();
+		UserValueFileWriter userWriter = new UserValueFileWriter(userName, tokenString, tokenSecret);
+		userWriter.tryToWriteToJsonFile(usersJSONObject);
+	}
+	
+	private void alertUserToSaveError(){
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Something went wrong!");
+		alert.setContentText("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
+		alert.showAndWait();
 	}
 	
 	private void tryToGenerateGif() {

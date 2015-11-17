@@ -11,14 +11,16 @@ public class ParseFromJSONFileTest {
 	private ParseFromJSONFile apiValueReader;
 	private JSONObject apiFileObject;
 	private ParseFromJSONFile tokenValueReader;
-	private JSONObject tokenFileObject;
+	protected JSONObject userFileObject;
+	private JSONObject testUser;
 	
 	@Before
 	public void testSetUp() {
 		apiValueReader = new ParseFromJSONFile("test-assets/test-api-values.json");
 		this.apiFileObject = this.apiValueReader.tryTtoReadFromFile();
-		tokenValueReader = new ParseFromJSONFile("test-assets/token-values.json");
-		this.tokenFileObject = this.tokenValueReader.tryTtoReadFromFile();
+		tokenValueReader = new ParseFromJSONFile("test-assets/test-users.json");
+		this.userFileObject = this.tokenValueReader.tryTtoReadFromFile();
+		this.testUser = this.tokenValueReader.parseOutObject("Test", userFileObject);
 	}
 	
 	@Test
@@ -35,13 +37,13 @@ public class ParseFromJSONFileTest {
 	
 	@Test
 	public void getTokenStringTest() {
-		String tokenString = this.tokenValueReader.parseOutObjectValue("tokenString", this.tokenFileObject);
+		String tokenString = this.tokenValueReader.parseOutObjectValue("tokenString", this.testUser);
 		assertTrue(tokenString.equals("4000272419-Two6y2CzdG0jpFMeKLVY9MAg4iNVc46SHA1dJBE"));
 	}
 	
 	@Test
 	public void getTokenSecretTest() {
-		String tokenSecret = this.tokenValueReader.parseOutObjectValue("tokenSecret", this.tokenFileObject);
+		String tokenSecret = this.tokenValueReader.parseOutObjectValue("tokenSecret", this.testUser);
 		assertTrue(tokenSecret.equals("l4TSgcMON0OX5AdUagKxLh81hIAJxgt2fgAgtcTVZwarV"));
 	}
 
