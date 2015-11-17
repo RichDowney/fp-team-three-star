@@ -37,6 +37,8 @@ public class TwitterBotUI extends Application {
 
 	private String apiKey;
 	private String apiSecret;
+	private String selectedUser;
+	private ParseFromJSONFile usersParser;
 	private JSONObject usersJSONObject;
 	private OAuth oAuth;
 	
@@ -169,7 +171,7 @@ public class TwitterBotUI extends Application {
 	private void configureComboBox() {
 		userSelector.getItems().add("None");
 		userSelector.setValue("None");
-		ParseFromJSONFile usersParser = new ParseFromJSONFile("twitter-values/users.json");
+		usersParser = new ParseFromJSONFile("twitter-values/users.json");
 		usersJSONObject = usersParser.tryTtoReadFromFile();
 		if(usersJSONObject != null){
 			
@@ -181,6 +183,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void setButtonActions(Stage primaryStage) {
+		setStartTweetingButton(primaryStage);
 		setAddNewUserButtonAction(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
@@ -198,6 +201,14 @@ public class TwitterBotUI extends Application {
 		primaryStage.setScene(startScene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
+	}
+	
+	private void setStartTweetingButton(Stage primaryStage) {
+		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToTweetScene(primaryStage);
+			}
+		});
 	}
 	
 	private void setAddNewUserButtonAction(Stage primaryStage) {
@@ -292,6 +303,23 @@ public class TwitterBotUI extends Application {
 	private void switchSceneToStartScene(Stage primaryStage) {
 		primaryStage.setScene(startScene);
 	}
+	
+	private void switchSceneToTweetScene(Stage primaryStage) {
+		selectedUser = this.userSelector.getValue();
+		if (selectedUser.equals("None")){
+			alertUserToSelectUserName();
+		} else {
+			primaryStage.setScene(tweetPostScene);
+		}
+	}
+	
+	private void alertUserToSelectUserName(){
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText("Selected Username not valid");
+		alert.setContentText("You must select a username to start tweeting.");
+		alert.showAndWait();
+	}
 
 	private void switchSceneToVerifyScene(Stage primaryStage) {
 		primaryStage.setScene(verifyScene);
@@ -302,8 +330,8 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void setApiValues() {
-		apiKey = apiKeyInputField.getText();
-		apiSecret = apiSecretInputField.getText();
+		apiKeyInputField.setText(apiKey);
+		apiSecretInputField.setText(apiSecret);
 	}
 
 	private void getApiValuesFromFile() {
@@ -311,8 +339,8 @@ public class TwitterBotUI extends Application {
 		JSONObject apiFileObject = apiValueFileReader.tryTtoReadFromFile();
 		String apiKeyFromFile = apiValueFileReader.parseOutObjectValue("apiKey", apiFileObject);
 		String apiSecretFromFile = apiValueFileReader.parseOutObjectValue("apiSecret", apiFileObject);
-		apiKeyInputField.setText(apiKeyFromFile);
-		apiSecretInputField.setText(apiSecretFromFile);
+		apiKey = apiKeyFromFile;
+		apiSecret = apiSecretFromFile;
 	}
 
 	private void writeApiValuesToFile() {
@@ -331,6 +359,8 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void createOAuthInstance() {
+		System.out.println(apiKey);
+		System.out.println(apiSecret);
 		oAuth = new OAuth(apiKey, apiSecret);
 	}
 
@@ -394,10 +424,14 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void postTweet() throws UnsupportedEncodingException {
+		getApiValuesFromFile();
+		createOAuthInstance();
+		oAuth.createOAuthService();
+		JSONObject userObject = usersParser.parseOutObject( selectedUser, usersJSONObject);
+		String tokenString = usersParser.parseOutObjectValue("tokenString", userObject);
+		String tokenSecret = usersParser.parseOutObjectValue("tokenSecret", userObject);
 		String tweetText = tweetTextInputField.getText();
-		String verifierCode = tokenVerifierInputField.getText();
-		oAuth.createVerifier(verifierCode);
-		oAuth.createAccessToken();
+		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
 	}
