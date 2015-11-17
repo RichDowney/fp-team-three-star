@@ -188,7 +188,7 @@ public class TwitterBotUI extends Application {
 		setApiNextButtonAction(primaryStage);
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
-		setSaveInfoButtonAction();
+		setSaveInfoButtonAction(primaryStage);
 		setGifButtonAction();
 		setPostTweetButtonAction();
 	}
@@ -275,12 +275,18 @@ public class TwitterBotUI extends Application {
 		});
 	}
 	
-	private void setSaveInfoButtonAction() {
+	private void setSaveInfoButtonAction(Stage primaryStage) {
 		saveInfoButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				tryToSaveInfo();
+				tryToSaveInfo(primaryStage);
 			}
 		});
+	}
+	
+	private void switchSceneToStartSceneAfterSave(Stage primaryStage) {
+		String userName = userNameInputField.getText();
+		userSelector.getItems().add(userName);
+		primaryStage.setScene(startScene);
 	}
 	
 	private void switchSceneToStartScene(Stage primaryStage) {
@@ -334,9 +340,10 @@ public class TwitterBotUI extends Application {
 
 	}
 	
-	private void tryToSaveInfo() {
+	private void tryToSaveInfo(Stage primaryStage) {
 		try {
 			saveInfo();
+			switchSceneToStartSceneAfterSave(primaryStage);
 		} catch (Exception e) {
 			alertUserToSaveError();
 		}
