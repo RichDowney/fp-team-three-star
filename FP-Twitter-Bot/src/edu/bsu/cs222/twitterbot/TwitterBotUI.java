@@ -351,7 +351,7 @@ public class TwitterBotUI extends Application {
 		String tokenSecret = accessToken.getSecret();
 		String userName = userNameInputField.getText();
 		UserValueFileWriter userWriter = new UserValueFileWriter(userName, tokenString, tokenSecret);
-		userWriter.createJSONObject(usersJSONObject);
+		userWriter.tryToWriteToJsonFile(usersJSONObject);
 	}
 	
 	private void alertUserToSaveError(){

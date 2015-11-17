@@ -18,9 +18,9 @@ public class UserValueFileWriter {
 		this.tokenSecret = tokenSecret;
 	}
 
-	public void tryToWriteToJsonFile(JSONObject fileObject) throws IOException {
+	public void tryToWriteToJsonFile(JSONObject fileJsonObject) throws IOException {
 		try {
-			writeToJsonFile(fileObject);
+			writeToJsonFile(fileJsonObject);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
