@@ -17,6 +17,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -33,6 +34,10 @@ public class TwitterBotUI extends Application {
 	private String apiKey;
 	private String apiSecret;
 	private OAuth oAuth;
+	
+	private ComboBox<String> userSelector = new ComboBox<>();
+	private GridPane startGrid = new GridPane();
+	private Scene startScene = new Scene(startGrid);
 
 	private GridPane apiGrid = new GridPane();
 	private TextField apiKeyInputField = new TextField();
@@ -60,12 +65,15 @@ public class TwitterBotUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		setGrid(startGrid);
+		addToStartGrid();
 		setGrid(apiGrid);
 		addtoApiGrid();
 		setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
 		configureTweetCharacterLimit();
 		configureTextFields();
+		configureComboBox();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
 	}
@@ -76,6 +84,10 @@ public class TwitterBotUI extends Application {
 		grid.setVgap(15);
 		grid.setPadding(new Insets(30, 30, 30, 30));
 		hbButtons.setSpacing(10.0);
+	}
+	
+	private void addToStartGrid() {
+		startGrid.add(userSelector, 1, 0);
 	}
 
 	private void addtoApiGrid() {
@@ -123,6 +135,11 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
 	}
+	
+	private void configureComboBox() {
+		userSelector.getItems().addAll("None");
+		userSelector.setValue("None");
+	}
 
 	private void setButtonActions(Stage primaryStage) {
 		setReadApiValuesButtonAction();
@@ -136,7 +153,7 @@ public class TwitterBotUI extends Application {
 
 	private void setStage(Stage primaryStage) {
 		primaryStage.setTitle("Twitter Bot");
-		primaryStage.setScene(apiScene);
+		primaryStage.setScene(startScene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
 	}
