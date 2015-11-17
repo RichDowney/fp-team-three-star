@@ -61,6 +61,7 @@ public class TwitterBotUI extends Application {
 	private TextArea tweetTextInputField = new TextArea();
 	private Button backToApiButton = new Button("Previous");
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
+	private Button saveInfoButton = new Button("Save Info");
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Scene verifyScene = new Scene(verifyGrid);
 	
@@ -117,11 +118,12 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiNextButton, 1, 3);
 	}
 	private void addToVerifyGrid() {
-		verifyGrid.add(authorizationUrlOutputField, 1, 2);
-		verifyGrid.add(tokenVerifierInputField, 1, 3);
-		verifyGrid.add(backToApiButton, 0, 5);
-		verifyGrid.add(getAuthorizationUrlButton, 0, 2);
-		verifyGrid.add(tokenVerifierLabel, 0, 3);
+		verifyGrid.add(authorizationUrlOutputField, 1, 0);
+		verifyGrid.add(tokenVerifierInputField, 1, 1);
+		verifyGrid.add(backToApiButton, 0, 2);
+		verifyGrid.add(saveInfoButton, 1, 2);
+		verifyGrid.add(getAuthorizationUrlButton, 0, 0);
+		verifyGrid.add(tokenVerifierLabel, 0, 1);
 	}
 
 	private void addtoTweetPostGrid() {
@@ -331,7 +333,6 @@ public class TwitterBotUI extends Application {
 
 	private void postTweet() throws UnsupportedEncodingException {
 		String tweetText = tweetTextInputField.getText();
-
 		String verifierCode = tokenVerifierInputField.getText();
 		oAuth.createVerifier(verifierCode);
 		oAuth.createAccessToken();
