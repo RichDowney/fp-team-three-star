@@ -15,9 +15,9 @@ public class ParseFromJSONFileTest {
 	
 	@Before
 	public void testSetUp() {
-		apiValueReader = new ParseFromJSONFile("test-assets/test-api-values.txt");
+		apiValueReader = new ParseFromJSONFile("test-assets/test-api-values.json");
 		this.apiFileObject = this.apiValueReader.tryTtoReadFromFile();
-		tokenValueReader = new ParseFromJSONFile("test-assets/token-values.txt");
+		tokenValueReader = new ParseFromJSONFile("test-assets/token-values.json");
 		this.tokenFileObject = this.tokenValueReader.tryTtoReadFromFile();
 	}
 	
