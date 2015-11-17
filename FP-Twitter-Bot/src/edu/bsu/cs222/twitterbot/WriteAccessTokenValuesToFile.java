@@ -8,35 +8,38 @@ import org.json.simple.JSONObject;
 
 public class WriteAccessTokenValuesToFile {
 	
+	private String userName;
 	private String tokenString;
 	private String tokenSecret;
 
-	public WriteAccessTokenValuesToFile(String tokenString, String tokenSecret) {
+	public WriteAccessTokenValuesToFile(String userName, String tokenString, String tokenSecret) {
+		this.userName = userName;
 		this.tokenString = tokenString;
 		this.tokenSecret = tokenSecret;
 	}
 
-	public void tryToWriteToJsonFile() throws IOException {
+	public void tryToWriteToJsonFile(JSONObject fileObject) throws IOException {
 		try {
-			writeToJsonFile();
+			writeToJsonFile(fileObject);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void writeToJsonFile() throws IOException {
-		JSONObject tokenJsonObject = createJSONObject();
-		FileWriter file = new FileWriter("twitter-token-values/token-values.txt");
-		file.write(tokenJsonObject.toJSONString());
+	public void writeToJsonFile(JSONObject fileJsonObject) throws IOException {
+		JSONObject newFileJsonObject = createJSONObject(fileJsonObject);
+		FileWriter file = new FileWriter("twitter-values/users.json");
+		file.write(newFileJsonObject.toJSONString());
 		file.flush();
 		file.close();
 	}
 
-	public JSONObject createJSONObject() {
+	public JSONObject createJSONObject(JSONObject fileJsonObject) {
 		JSONObject tokenJsonObject = new JSONObject();
 		asMap(tokenJsonObject).put("tokenString", this.tokenString);
 		asMap(tokenJsonObject).put("tokenSecret", this.tokenSecret);
-		return tokenJsonObject;
+		asMap(fileJsonObject).put(this.userName, tokenJsonObject);
+		return fileJsonObject;
 	}
 
 	@SuppressWarnings("unchecked")
