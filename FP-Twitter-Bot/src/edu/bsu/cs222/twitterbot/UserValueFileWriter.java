@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
-public class WriteAccessTokenValuesToFile {
+public class UserValueFileWriter {
 	
 	private String userName;
 	private String tokenString;
 	private String tokenSecret;
 
-	public WriteAccessTokenValuesToFile(String userName, String tokenString, String tokenSecret) {
+	public UserValueFileWriter(String userName, String tokenString, String tokenSecret) {
 		this.userName = userName;
 		this.tokenString = tokenString;
 		this.tokenSecret = tokenSecret;
