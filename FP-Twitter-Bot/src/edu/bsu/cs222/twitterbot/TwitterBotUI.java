@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
+import java.util.Iterator;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -160,8 +161,15 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void configureComboBox() {
-		userSelector.getItems().addAll("None");
+		userSelector.getItems().add("None");
 		userSelector.setValue("None");
+		ParseFromJSONFile usersParser = new ParseFromJSONFile("twitter-values/users.json");
+		usersParser.tryTtoReadFromFile();
+		JSONObject fileObject = usersParser.tryTtoReadFromFile();
+		for(Iterator iterator = fileObject.keySet().iterator(); iterator.hasNext();) {
+		    String key = (String) iterator.next();
+		    userSelector.getItems().add(key);
+		}
 	}
 
 	private void setButtonActions(Stage primaryStage) {
