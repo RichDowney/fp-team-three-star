@@ -152,6 +152,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void setButtonActions(Stage primaryStage) {
+		setStartTweetingButtonAction(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiNextButtonAction(primaryStage);
@@ -167,12 +168,20 @@ public class TwitterBotUI extends Application {
 		primaryStage.sizeToScene();
 		primaryStage.show();
 	}
+	
+	private void setStartTweetingButtonAction(Stage primaryStage) {
+		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToApiScene(primaryStage);
+			}
+		});
+	}
 
 	private void setApiNextButtonAction(Stage primaryStage) {
 		apiNextButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				setApiValues();
-				switchSceneToGrid(primaryStage);
+				switchSceneToTweetScene(primaryStage);
 			}
 		});
 	}
@@ -227,7 +236,7 @@ public class TwitterBotUI extends Application {
 		});
 	}
 
-	private void switchSceneToGrid(Stage primaryStage) {
+	private void switchSceneToTweetScene(Stage primaryStage) {
 		primaryStage.setScene(tweetPostScene);
 	}
 
