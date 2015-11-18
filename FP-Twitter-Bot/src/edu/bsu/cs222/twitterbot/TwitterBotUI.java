@@ -18,8 +18,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -41,6 +39,7 @@ public class TwitterBotUI extends Application {
 	private ParseFromJSONFile usersParser;
 	private JSONObject usersJSONObject;
 	private OAuth oAuth;
+	private AlertFactory alertFactory = new AlertFactory();
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
 	private Label userSelectorLabel = new Label("Select User To Tweet From");
@@ -317,18 +316,10 @@ public class TwitterBotUI extends Application {
 	private void switchSceneToTweetScene(Stage primaryStage) {
 		selectedUser = this.userSelector.getValue();
 		if (selectedUser.equals("None")){
-			alertUserToSelectUserName();
+			alertFactory.createInfoAlert("You must select a username to start tweeting.");
 		} else {
 			primaryStage.setScene(tweetPostScene);
 		}
-	}
-	
-	private void alertUserToSelectUserName(){
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Information");
-		alert.setHeaderText("Selected Username not valid");
-		alert.setContentText("You must select a username to start tweeting.");
-		alert.showAndWait();
 	}
 	
 	private void getApiValuesFromFile() {
@@ -382,7 +373,7 @@ public class TwitterBotUI extends Application {
 			saveInfo();
 			switchSceneToStartSceneAfterSave(primaryStage);
 		} catch (Exception e) {
-			alertUserToSaveError();
+			alertFactory.createErrorAlert("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
 		}
 	}
 	
@@ -404,19 +395,11 @@ public class TwitterBotUI extends Application {
 		primaryStage.setScene(startScene);
 	}
 	
-	private void alertUserToSaveError() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Something went wrong!");
-		alert.setContentText("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
-		alert.showAndWait();
-	}
-	
 	private void tryToGenerateGif() {
 		try {
 			generateGif();
 		} catch (ParseException | IOException e) {
-			alertUserToGiphyError();
+			alertFactory.createErrorAlert("Error getting the Giphy URL, check your internet connection");
 		}
 	}
 	
@@ -428,20 +411,12 @@ public class TwitterBotUI extends Application {
 		String gifURL = giphyParser.parseOutURL();
 		tweetTextInputField.setText(gifURL);
 	}
-	
-	private void alertUserToGiphyError() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Something went wrong!");
-		alert.setContentText("Error getting the Giphy URL, check your internet connection");
-		alert.showAndWait();
-	}
 
 	private void tryToPostTweet() {
 		try {
 			postTweet();
 		} catch (UnsupportedEncodingException e) {
-			alertUserToTweetError();
+			alertFactory.createErrorAlert("Error posting tweet to your Twitter account, check your internet connection and tweet content");
 		}
 	}
 
@@ -456,14 +431,6 @@ public class TwitterBotUI extends Application {
 		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
-	}
-	
-	private void alertUserToTweetError() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Something went wrong!");
-		alert.setContentText("Error posting tweet to your Twitter account, check your internet connection and tweet content");
-		alert.showAndWait();
 	}
 
 }
