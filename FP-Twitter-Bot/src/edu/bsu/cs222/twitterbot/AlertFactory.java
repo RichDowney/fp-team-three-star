@@ -5,7 +5,7 @@ import javafx.scene.control.Alert.AlertType;
 
 public class AlertFactory {
 	
-	private void createErrorAlert(String errorMessage) {
+	public void createErrorAlert(String errorMessage) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
 		alert.setHeaderText("Something went wrong!");
@@ -13,7 +13,7 @@ public class AlertFactory {
 		alert.showAndWait();
 	}
 	
-	private void createInfoAlert(String infoMessage){
+	public void createInfoAlert(String infoMessage){
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Information");
 		alert.setHeaderText("Did You Know?");
