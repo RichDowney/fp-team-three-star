@@ -84,19 +84,19 @@ public class TwitterBotUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		setGrid(startGrid);
-		addToStartGrid();
-		setGrid(apiGrid);
-		addtoApiGrid();
-		setGrid(verifyGrid);
-		addToVerifyGrid();
-		setGrid(tweetPostGrid);
-		addtoTweetPostGrid();
-		configureTweetCharacterLimit();
+		setAllGrids();
+		addToAllGrids();
 		configureTextFields();
 		configureComboBox();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
+	}
+	
+	private void setAllGrids(){
+		setGrid(startGrid);
+		setGrid(apiGrid);
+		setGrid(verifyGrid);
+		setGrid(tweetPostGrid);
 	}
 
 	private void setGrid(GridPane grid) {
@@ -105,6 +105,13 @@ public class TwitterBotUI extends Application {
 		grid.setVgap(15);
 		grid.setPadding(new Insets(30, 30, 30, 30));
 		hbButtons.setSpacing(10.0);
+	}
+	
+	private void addToAllGrids() {
+		addToStartGrid();
+		addtoApiGrid();
+		addToVerifyGrid();
+		addtoTweetPostGrid();
 	}
 	
 	private void addToStartGrid() {
@@ -144,6 +151,19 @@ public class TwitterBotUI extends Application {
 		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
 	}
 
+	private void configureTextFields() {
+		apiKeyInputField.setPromptText("Paste in API Key");
+		apiSecretInputField.setPromptText("Paste in API Secret");
+		authorizationUrlOutputField.setPromptText("Goto for Authorization Code");
+		authorizationUrlOutputField.setEditable(false);
+		tokenVerifierInputField.setPromptText("Paste in Authorization Code");
+		tweetTextInputField.setPromptText("Tweet limited to 140 Characters");
+		tweetTextInputField.setPrefRowCount(5);
+		tweetTextInputField.setPrefColumnCount(15);
+		tweetTextInputField.setWrapText(true);
+		configureTweetCharacterLimit();
+	}
+	
 	private void configureTweetCharacterLimit() {
 		tweetTextInputField.lengthProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -155,36 +175,27 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-
-	private void configureTextFields() {
-		apiKeyInputField.setPromptText("Paste in API Key");
-		apiSecretInputField.setPromptText("Paste in API Secret");
-		authorizationUrlOutputField.setPromptText("Goto for Authorization Code");
-		authorizationUrlOutputField.setEditable(false);
-		tokenVerifierInputField.setPromptText("Paste in Authorization Code");
-		tweetTextInputField.setPromptText("Tweet limited to 140 Characters");
-		tweetTextInputField.setPrefRowCount(5);
-		tweetTextInputField.setPrefColumnCount(15);
-		tweetTextInputField.setWrapText(true);
-	}
 	
 	private void configureComboBox() {
 		userSelector.getItems().add("None");
 		userSelector.setValue("None");
+		addUsersFromFile();
+	}
+	
+	private void addUsersFromFile() {
 		usersParser = new ParseFromJSONFile("twitter-values/users.json");
 		usersJSONObject = usersParser.tryTtoReadFromFile();
-		if(usersJSONObject != null){
-			
-		for(Iterator iterator = usersJSONObject.keySet().iterator(); iterator.hasNext();) {
-		    String key = (String) iterator.next();
-		    userSelector.getItems().add(key);
-		}
+		if(usersJSONObject != null){	
+			for(Iterator<?> iterator = usersJSONObject.keySet().iterator(); iterator.hasNext();) {
+				String key = (String) iterator.next();
+				userSelector.getItems().add(key);
+			}
 		}
 	}
 
 	private void setButtonActions(Stage primaryStage) {
-		setStartTweetingButton(primaryStage);
 		setAddNewUserButtonAction(primaryStage);
+		setStartTweetingButton(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
@@ -203,6 +214,14 @@ public class TwitterBotUI extends Application {
 		primaryStage.show();
 	}
 	
+	private void setAddNewUserButtonAction(Stage primaryStage) {
+		addNewUserButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToApiScene(primaryStage);
+			}
+		});
+	}
+	
 	private void setStartTweetingButton(Stage primaryStage) {
 		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -211,10 +230,20 @@ public class TwitterBotUI extends Application {
 		});
 	}
 	
-	private void setAddNewUserButtonAction(Stage primaryStage) {
-		addNewUserButton.setOnAction(new EventHandler<ActionEvent>() {
+	private void setReadApiValuesButtonAction() {
+		readApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				switchSceneToApiScene(primaryStage);
+				getApiValuesFromFile();
+				setApiValues();
+			}
+		});
+	}
+
+	private void setWriteApiValuesButtonAction() {
+		writeApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				writeApiValuesToFile();
+				setApiValues();
 			}
 		});
 	}
@@ -236,28 +265,26 @@ public class TwitterBotUI extends Application {
 		});
 	}
 
-	private void setReadApiValuesButtonAction() {
-		readApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				getApiValuesFromFile();
-				setApiValues();
-			}
-		});
-	}
-
-	private void setWriteApiValuesButtonAction() {
-		writeApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				writeApiValuesToFile();
-				setApiValues();
-			}
-		});
-	}
-
 	private void setGetAuthorizationUrlButtonAction() {
 		getAuthorizationUrlButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				generateAuthorizationUrl();
+			}
+		});
+	}
+	
+	private void setBackToApiButtonAction(Stage primaryStage) {
+		backToApiButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToApiScene(primaryStage);
+			}
+		});
+	}
+	
+	private void setSaveInfoButtonAction(Stage primaryStage) {
+		saveInfoButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tryToSaveInfo(primaryStage);
 			}
 		});
 	}
@@ -277,31 +304,9 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-
-	private void setBackToApiButtonAction(Stage primaryStage) {
-		backToApiButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				switchSceneToApiScene(primaryStage);
-			}
-		});
-	}
 	
-	private void setSaveInfoButtonAction(Stage primaryStage) {
-		saveInfoButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				tryToSaveInfo(primaryStage);
-			}
-		});
-	}
-	
-	private void switchSceneToStartSceneAfterSave(Stage primaryStage) {
-		String userName = userNameInputField.getText();
-		userSelector.getItems().add(userName);
-		primaryStage.setScene(startScene);
-	}
-	
-	private void switchSceneToStartScene(Stage primaryStage) {
-		primaryStage.setScene(startScene);
+	private void switchSceneToApiScene(Stage primaryStage) {
+		primaryStage.setScene(apiScene);
 	}
 	
 	private void switchSceneToTweetScene(Stage primaryStage) {
@@ -320,20 +325,7 @@ public class TwitterBotUI extends Application {
 		alert.setContentText("You must select a username to start tweeting.");
 		alert.showAndWait();
 	}
-
-	private void switchSceneToVerifyScene(Stage primaryStage) {
-		primaryStage.setScene(verifyScene);
-	}
-
-	private void switchSceneToApiScene(Stage primaryStage) {
-		primaryStage.setScene(apiScene);
-	}
-
-	private void setApiValues() {
-		apiKeyInputField.setText(apiKey);
-		apiSecretInputField.setText(apiSecret);
-	}
-
+	
 	private void getApiValuesFromFile() {
 		ParseFromJSONFile apiValueFileReader = new ParseFromJSONFile("twitter-values/api-values.json");
 		JSONObject apiFileObject = apiValueFileReader.tryTtoReadFromFile();
@@ -342,14 +334,27 @@ public class TwitterBotUI extends Application {
 		apiKey = apiKeyFromFile;
 		apiSecret = apiSecretFromFile;
 	}
-
+	
+	private void setApiValues() {
+		apiKeyInputField.setText(apiKey);
+		apiSecretInputField.setText(apiSecret);
+	}
+	
 	private void writeApiValuesToFile() {
 		String apiKeyValueToWrite = apiKeyInputField.getText();
 		String apiSecretValueToWrite = apiSecretInputField.getText();
 		APIValueFileWriter apiValueFileWriter = new APIValueFileWriter(apiKeyValueToWrite, apiSecretValueToWrite);
 		apiValueFileWriter.tryToWriteToJsonFile();
 	}
-
+	
+	private void switchSceneToStartScene(Stage primaryStage) {
+		primaryStage.setScene(startScene);
+	}
+	
+	private void switchSceneToVerifyScene(Stage primaryStage) {
+		primaryStage.setScene(verifyScene);
+	}
+	
 	private void generateAuthorizationUrl() {
 		createOAuthInstance();
 		oAuth.createOAuthService();
@@ -357,17 +362,14 @@ public class TwitterBotUI extends Application {
 		oAuth.createAuthorizationUrl();
 		displayAuthorizationUrl();
 	}
-
+	
 	private void createOAuthInstance() {
-		System.out.println(apiKey);
-		System.out.println(apiSecret);
 		oAuth = new OAuth(apiKey, apiSecret);
 	}
-
+	
 	private void displayAuthorizationUrl() {
 		String authorizationUrl = oAuth.getAuthorizationUrl();
 		authorizationUrlOutputField.setText(authorizationUrl);
-
 	}
 	
 	private void tryToSaveInfo(Stage primaryStage) {
@@ -391,7 +393,13 @@ public class TwitterBotUI extends Application {
 		userWriter.tryToWriteToJsonFile(usersJSONObject);
 	}
 	
-	private void alertUserToSaveError(){
+	private void switchSceneToStartSceneAfterSave(Stage primaryStage) {
+		String userName = userNameInputField.getText();
+		userSelector.getItems().add(userName);
+		primaryStage.setScene(startScene);
+	}
+	
+	private void alertUserToSaveError() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
 		alert.setHeaderText("Something went wrong!");
@@ -403,7 +411,7 @@ public class TwitterBotUI extends Application {
 		try {
 			generateGif();
 		} catch (ParseException | IOException e) {
-			tweetTextInputField.setText("Error Getting The Gif URL");
+			alertUserToGiphyError();
 		}
 	}
 	
@@ -414,12 +422,20 @@ public class TwitterBotUI extends Application {
 		String gifURL = giphyParser.parseOutURL();
 		tweetTextInputField.setText(gifURL);
 	}
+	
+	private void alertUserToGiphyError() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Something went wrong!");
+		alert.setContentText("Error getting the Giphy URL, check your internet connection");
+		alert.showAndWait();
+	}
 
 	private void tryToPostTweet() {
 		try {
 			postTweet();
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			alertUserToTweetError();
 		}
 	}
 
@@ -434,6 +450,14 @@ public class TwitterBotUI extends Application {
 		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
+	}
+	
+	private void alertUserToTweetError() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Something went wrong!");
+		alert.setContentText("Error posting tweet to your Twitter account, check your internet connection and tweet content");
+		alert.showAndWait();
 	}
 
 }
