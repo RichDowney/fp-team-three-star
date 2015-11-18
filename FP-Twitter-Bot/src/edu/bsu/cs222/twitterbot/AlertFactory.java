@@ -20,4 +20,12 @@ public class AlertFactory {
 		alert.setContentText(infoMessage);
 		alert.showAndWait();
 	}
+	
+	public void createConfirmAlert(String infoMessage){
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation");
+		alert.setHeaderText("It was a Success!");
+		alert.setContentText(infoMessage);
+		alert.showAndWait();
+	}
 }
