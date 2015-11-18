@@ -371,6 +371,7 @@ public class TwitterBotUI extends Application {
 	private void tryToSaveInfo(Stage primaryStage) {
 		try {
 			saveInfo();
+			alertFactory.createConfirmAlert("Your account was saved!");
 			switchSceneToStartSceneAfterSave(primaryStage);
 		} catch (Exception e) {
 			alertFactory.createErrorAlert("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
@@ -415,6 +416,7 @@ public class TwitterBotUI extends Application {
 	private void tryToPostTweet() {
 		try {
 			postTweet();
+			alertFactory.createConfirmAlert("Tweet Successfully Posted!");
 		} catch (UnsupportedEncodingException e) {
 			alertFactory.createErrorAlert("Error posting tweet to your Twitter account, check your internet connection and tweet content");
 		}
