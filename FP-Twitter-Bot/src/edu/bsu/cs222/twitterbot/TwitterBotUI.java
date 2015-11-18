@@ -76,8 +76,10 @@ public class TwitterBotUI extends Application {
 	
 	private GridPane tweetPostGrid = new GridPane();
 	private HBox hbButtons = new HBox();
+	private TextField giphyInputField = new TextField();
 	private Button gifButton = new Button("Get Gif");
 	private Button postTweetButton = new Button("Post Tweet");
+	private Label giphyLabel = new Label("Giphy Tag");
 	private Label tweetTextLabel = new Label("Tweet Text Content");
 	private Scene tweetPostScene = new Scene(tweetPostGrid);
 	private final int tweetLimit = 140;
@@ -145,10 +147,12 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void addtoTweetPostGrid() {
-		tweetPostGrid.add(tweetTextInputField, 1, 4);
-		tweetPostGrid.add(tweetTextLabel, 0, 4);
+		tweetPostGrid.add(giphyLabel,0,0);
+		tweetPostGrid.add(giphyInputField,1,0);
+		tweetPostGrid.add(tweetTextLabel, 0, 2);
+		tweetPostGrid.add(tweetTextInputField, 1, 2);
 		hbButtons.getChildren().addAll (gifButton, postTweetButton);
-		tweetPostGrid.add(hbButtons, 1, 5, 2, 1);
+		tweetPostGrid.add(hbButtons, 1, 3, 2, 1);
 	}
 
 	private void configureTextFields() {
@@ -158,6 +162,7 @@ public class TwitterBotUI extends Application {
 		authorizationUrlOutputField.setEditable(false);
 		tokenVerifierInputField.setPromptText("Paste in Authorization Code");
 		tweetTextInputField.setPromptText("Tweet limited to 140 Characters");
+		giphyInputField.setPromptText("Enter Giphy Search Term");
 		tweetTextInputField.setPrefRowCount(5);
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
@@ -416,7 +421,8 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void generateGif() throws ParseException, IOException {
-		GiphyConnection giphyConnection = new  GiphyConnection("cat");
+		String giphySearchTerm = giphyInputField.getText();
+		GiphyConnection giphyConnection = new  GiphyConnection(giphySearchTerm);
 		URLConnection  connection = giphyConnection.connectToGiphy();
 		GiphyJSONParser giphyParser = new GiphyJSONParser(connection);
 		String gifURL = giphyParser.parseOutURL();
