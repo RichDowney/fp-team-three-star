@@ -78,6 +78,15 @@ public class TwitterBotUI extends Application {
 	private Button automaticButton = new Button("Automatic Tweet");
 	private Scene tweetTypeScene = new Scene(typeOfTweetGrid);
 	
+	private GridPane automaticTweetGrid = new GridPane();
+	private ComboBox<String> timerSelector = new ComboBox<>();
+	private Label timerSelectorLabel = new Label("Select Time Interval To Tweet");
+	private TextField autoGiphyInputField = new TextField();
+	private Label autoGiphyLabel = new Label("Giphy Tag");
+	private Button backToTweetTypeButton = new Button("Back");
+	private Button startAutomaticButton = new Button("Begin Auto Tweeting");
+	private Scene automaticTweetScene = new Scene(automaticTweetGrid);
+	
 	private GridPane tweetPostGrid = new GridPane();
 	private HBox hbButtons = new HBox();
 	private TextField giphyInputField = new TextField();
@@ -94,6 +103,7 @@ public class TwitterBotUI extends Application {
 		addToAllGrids();
 		configureTextFields();
 		configureComboBox();
+		configureTimerComboBox();
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
 	}
@@ -103,6 +113,7 @@ public class TwitterBotUI extends Application {
 		setGrid(apiGrid);
 		setGrid(verifyGrid);
 		setGrid(typeOfTweetGrid);
+		setGrid(automaticTweetGrid);
 		setGrid(tweetPostGrid);
 	}
 
@@ -119,6 +130,7 @@ public class TwitterBotUI extends Application {
 		addtoApiGrid();
 		addToVerifyGrid();
 		addToTypeOfTweetGrid();
+		addToAutomaticTweetGrid();
 		addtoTweetPostGrid();
 	}
 	
@@ -155,6 +167,15 @@ public class TwitterBotUI extends Application {
 	private void addToTypeOfTweetGrid() {
 		typeOfTweetGrid.add(manualButton,0,0);
 		typeOfTweetGrid.add(automaticButton,1,0);
+	}
+	
+	private void addToAutomaticTweetGrid() {
+		automaticTweetGrid.add(timerSelectorLabel,0,0);
+		automaticTweetGrid.add(timerSelector,1,0);
+		automaticTweetGrid.add(autoGiphyLabel,0,1);
+		automaticTweetGrid.add(autoGiphyInputField,1,1);
+		automaticTweetGrid.add(backToTweetTypeButton,0,2);
+		automaticTweetGrid.add(startAutomaticButton,1,2);
 	}
 
 	private void addtoTweetPostGrid() {
@@ -208,11 +229,25 @@ public class TwitterBotUI extends Application {
 			}
 		}
 	}
+	
+	private void configureTimerComboBox() {
+		timerSelector.getItems().add("1 Minute");
+		timerSelector.getItems().add("5 Minutes");
+		timerSelector.getItems().add("10 Minutes");
+		timerSelector.getItems().add("15 Minutes");
+		timerSelector.getItems().add("20 Minutes");
+		timerSelector.getItems().add("25 Minutes");
+		timerSelector.getItems().add("30 Minutes");
+		timerSelector.getItems().add("45 Minutes");
+		timerSelector.getItems().add("1 Hour");
+		timerSelector.setValue("10 Minutes");
+	}
 
 	private void setButtonActions(Stage primaryStage) {
 		setAddNewUserButtonAction(primaryStage);
 		setStartTweetingButton(primaryStage);
 		setManualButton(primaryStage);
+		setAutomaticButton(primaryStage);
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
@@ -220,10 +255,11 @@ public class TwitterBotUI extends Application {
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
 		setSaveInfoButtonAction(primaryStage);
+		setBackToTweetTypeButtonAction(primaryStage);
 		setGifButtonAction();
 		setPostTweetButtonAction();
 	}
-
+	
 	private void setStage(Stage primaryStage) {
 		primaryStage.setTitle("Twitter Bot");
 		primaryStage.setScene(startScene);
@@ -258,7 +294,7 @@ public class TwitterBotUI extends Application {
 	private void setAutomaticButton(Stage primaryStage) {
 		automaticButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				switchSceneToTweetScene(primaryStage);
+				switchSceneToAutomaticTweetScene(primaryStage);
 			}
 		});
 	}
@@ -329,6 +365,14 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
+	
+	private void setBackToTweetTypeButtonAction(Stage primaryStage) {
+		backToTweetTypeButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToTweetTypeScene(primaryStage);
+			}
+		});
+	}
 
 	private void setPostTweetButtonAction() {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -352,7 +396,11 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void switchSceneToTweetScene(Stage primaryStage) {
-			primaryStage.setScene(tweetPostScene);
+		primaryStage.setScene(tweetPostScene);
+}
+	
+	private void switchSceneToAutomaticTweetScene(Stage primaryStage) {
+			primaryStage.setScene(automaticTweetScene);
 	}
 	
 	private void getApiValuesFromFile() {
