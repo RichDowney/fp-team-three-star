@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.Timer;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -248,6 +249,7 @@ public class TwitterBotUI extends Application {
 		setStartTweetingButton(primaryStage);
 		setManualButton(primaryStage);
 		setAutomaticButton(primaryStage);
+		setAutomaticButtonAction();
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
@@ -374,10 +376,18 @@ public class TwitterBotUI extends Application {
 		});
 	}
 	
-	private void startAutomaticButtonAction(Stage primaryStage) {
-		backToTweetTypeButton.setOnAction(new EventHandler<ActionEvent>() {
+	private void setAutomaticButtonAction() {
+		startAutomaticButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				switchSceneToTweetTypeScene(primaryStage);
+				try {
+					autoPostTweet();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -526,6 +536,12 @@ public class TwitterBotUI extends Application {
 		String tweetText = tweetTextInputField.getText();
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
+	}
+	
+	private void autoPostTweet() throws ParseException, IOException {
+		String giphySearchTerm = autoGiphyInputField.getText();
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TweetTimer(oAuth, giphySearchTerm), 10000, 5000);
 	}
 
 }
