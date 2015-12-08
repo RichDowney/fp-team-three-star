@@ -373,6 +373,14 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
+	
+	private void startAutomaticButtonAction(Stage primaryStage) {
+		backToTweetTypeButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				switchSceneToTweetTypeScene(primaryStage);
+			}
+		});
+	}
 
 	private void setPostTweetButtonAction() {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
