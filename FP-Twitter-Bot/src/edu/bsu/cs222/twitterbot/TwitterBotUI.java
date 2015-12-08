@@ -400,7 +400,18 @@ public class TwitterBotUI extends Application {
 			alertFactory.createInfoAlert("You must select a username to start tweeting.");
 		} else {
 			primaryStage.setScene(tweetTypeScene);
+			setUpTweetService();
 		}
+	}
+	
+	private void setUpTweetService() {
+		getApiValuesFromFile();
+		createOAuthInstance();
+		oAuth.createOAuthService();
+		JSONObject userObject = usersParser.parseOutObject( selectedUser, usersJSONObject);
+		String tokenString = usersParser.parseOutObjectValue("tokenString", userObject);
+		String tokenSecret = usersParser.parseOutObjectValue("tokenSecret", userObject);
+		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 	}
 	
 	private void switchSceneToTweetScene(Stage primaryStage) {
@@ -512,14 +523,7 @@ public class TwitterBotUI extends Application {
 	}
 
 	private void postTweet() throws UnsupportedEncodingException {
-		getApiValuesFromFile();
-		createOAuthInstance();
-		oAuth.createOAuthService();
-		JSONObject userObject = usersParser.parseOutObject( selectedUser, usersJSONObject);
-		String tokenString = usersParser.parseOutObjectValue("tokenString", userObject);
-		String tokenSecret = usersParser.parseOutObjectValue("tokenSecret", userObject);
 		String tweetText = tweetTextInputField.getText();
-		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
 	}
