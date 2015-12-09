@@ -67,7 +67,6 @@ public class TwitterBotUI extends Application {
 	private GridPane verifyGrid = new GridPane();
 	private TextField authorizationUrlOutputField = new TextField();
 	private TextField tokenVerifierInputField = new TextField();
-	private TextArea tweetTextInputField = new TextArea();
 	private Button backToApiButton = new Button("Previous");
 	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
 	private Button saveInfoButton = new Button("Save Info");
@@ -91,6 +90,7 @@ public class TwitterBotUI extends Application {
 	private GridPane tweetPostGrid = new GridPane();
 	private HBox hbButtons = new HBox();
 	private TextField giphyInputField = new TextField();
+	private TextArea tweetTextInputField = new TextArea();
 	private Button gifButton = new Button("Get Gif");
 	private Button postTweetButton = new Button("Post Tweet");
 	private Label giphyLabel = new Label("Giphy Tag");
@@ -379,17 +379,17 @@ public class TwitterBotUI extends Application {
 	private void setAutomaticButtonAction() {
 		startAutomaticButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				try {
-					autoPostTweet();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				tryToAutoPostTweets();
 			}
 		});
+	}
+	
+	private void tryToAutoPostTweets() {
+		try {
+			autoPostTweet();
+		} catch (Exception e) {
+			alertFactory.createErrorAlert("Something went wrong, check your Internet Connection");
+		}
 	}
 
 	private void setPostTweetButtonAction() {
