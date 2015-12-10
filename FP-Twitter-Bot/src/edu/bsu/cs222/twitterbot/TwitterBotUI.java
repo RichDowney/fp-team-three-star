@@ -42,6 +42,7 @@ public class TwitterBotUI extends Application {
 	protected OAuth oAuth;
 	protected AlertFactory alertFactory = new AlertFactory();
 	private AutoTweetUI autoUI;
+	private ManualTweetUI manualUI;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
 	private Label userSelectorLabel = new Label("Select User To Tweet From");
@@ -78,17 +79,6 @@ public class TwitterBotUI extends Application {
 	private Button manualButton = new Button("Manual Tweet");
 	private Button automaticButton = new Button("Automatic Tweet");
 	private Scene tweetTypeScene = new Scene(typeOfTweetGrid);
-	
-	private GridPane tweetPostGrid = new GridPane();
-	private HBox hbButtons = new HBox();
-	private TextField giphyInputField = new TextField();
-	private TextArea tweetTextInputField = new TextArea();
-	private Button gifButton = new Button("Get Gif");
-	private Button postTweetButton = new Button("Post Tweet");
-	private Label giphyLabel = new Label("Giphy Tag");
-	private Label tweetTextLabel = new Label("Tweet Text Content");
-	private Scene tweetPostScene = new Scene(tweetPostGrid);
-	private final int tweetLimit = 140;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -101,6 +91,8 @@ public class TwitterBotUI extends Application {
 		setStage(primaryStage);
 		autoUI = new AutoTweetUI(primaryStage, this);
 		autoUI.setUp();
+		manualUI = new ManualTweetUI(primaryStage, this);
+		manualUI.setUp();
 	}
 	
 	private void setAllGrids(){
@@ -108,8 +100,6 @@ public class TwitterBotUI extends Application {
 		setGrid(apiGrid);
 		setGrid(verifyGrid);
 		setGrid(typeOfTweetGrid);
-
-		setGrid(tweetPostGrid);
 	}
 
 	protected void setGrid(GridPane grid) {
@@ -124,8 +114,6 @@ public class TwitterBotUI extends Application {
 		addtoApiGrid();
 		addToVerifyGrid();
 		addToTypeOfTweetGrid();
-
-		addtoTweetPostGrid();
 	}
 	
 	private void addToStartGrid() {
@@ -163,40 +151,12 @@ public class TwitterBotUI extends Application {
 		typeOfTweetGrid.add(automaticButton,1,0);
 	}
 
-	private void addtoTweetPostGrid() {
-		tweetPostGrid.add(giphyLabel,0,0);
-		tweetPostGrid.add(giphyInputField,1,0);
-		tweetPostGrid.add(tweetTextLabel, 0, 2);
-		tweetPostGrid.add(tweetTextInputField, 1, 2);
-		hbButtons.getChildren().addAll (gifButton, postTweetButton);
-		tweetPostGrid.add(hbButtons, 1, 3, 2, 1);
-	}
-
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
 		apiSecretInputField.setPromptText("Paste in API Secret");
 		authorizationUrlOutputField.setPromptText("Goto for Authorization Code");
 		authorizationUrlOutputField.setEditable(false);
 		tokenVerifierInputField.setPromptText("Paste in Authorization Code");
-		tweetTextInputField.setPromptText("Tweet limited to 140 Characters");
-		giphyInputField.setPromptText("Enter Giphy Search Term");
-		tweetTextInputField.setPrefRowCount(5);
-		tweetTextInputField.setPrefColumnCount(15);
-		tweetTextInputField.setWrapText(true);
-		hbButtons.setSpacing(10.0);
-		configureTweetCharacterLimit();
-	}
-	
-	private void configureTweetCharacterLimit() {
-		tweetTextInputField.lengthProperty().addListener(new ChangeListener<Number>() {
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if (newValue.intValue() > oldValue.intValue()) {
-					if (tweetTextInputField.getText().length() >= tweetLimit) {
-						tweetTextInputField.setText(tweetTextInputField.getText().substring(0, tweetLimit));
-					}
-				}
-			}
-		});
 	}
 	
 	private void configureComboBox() {
@@ -229,9 +189,6 @@ public class TwitterBotUI extends Application {
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
 		setSaveInfoButtonAction(primaryStage);
-
-		setGifButtonAction();
-		setPostTweetButtonAction();
 	}
 	
 	private void setStage(Stage primaryStage) {
@@ -332,22 +289,6 @@ public class TwitterBotUI extends Application {
 		});
 	}
 	
-	private void setGifButtonAction() {
-		gifButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				tryToGenerateGif();
-			}
-		});
-	}
-
-	private void setPostTweetButtonAction() {
-		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				tryToPostTweet();
-			}
-		});
-	}
-	
 	private void switchSceneToApiScene(Stage primaryStage) {
 		primaryStage.setScene(apiScene);
 	}
@@ -373,7 +314,7 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void switchSceneToTweetScene(Stage primaryStage) {
-		primaryStage.setScene(tweetPostScene);
+		primaryStage.setScene(manualUI.getManualTweetScene());
 }
 	
 	private void switchSceneToAutomaticTweetScene(Stage primaryStage) {
@@ -452,38 +393,6 @@ public class TwitterBotUI extends Application {
 		String userName = userNameInputField.getText();
 		userSelector.getItems().add(userName);
 		primaryStage.setScene(startScene);
-	}
-	
-	private void tryToGenerateGif() {
-		try {
-			generateGif();
-		} catch (ParseException | IOException e) {
-			alertFactory.createErrorAlert("Error getting the Giphy URL, check your internet connection");
-		}
-	}
-	
-	private void generateGif() throws ParseException, IOException {
-		String giphySearchTerm = giphyInputField.getText();
-		GiphyConnection giphyConnection = new  GiphyConnection(giphySearchTerm);
-		URLConnection  connection = giphyConnection.connectToGiphy();
-		GiphyJSONParser giphyParser = new GiphyJSONParser(connection);
-		String gifURL = giphyParser.parseOutURL();
-		tweetTextInputField.setText(gifURL);
-	}
-
-	private void tryToPostTweet() {
-		try {
-			postTweet();
-			alertFactory.createConfirmAlert("Tweet Successfully Posted!");
-		} catch (UnsupportedEncodingException e) {
-			alertFactory.createErrorAlert("Error posting tweet to your Twitter account, check your internet connection and tweet content");
-		}
-	}
-
-	private void postTweet() throws UnsupportedEncodingException {
-		String tweetText = tweetTextInputField.getText();
-		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
-		tweetPoster.tryToPostTweet();
 	}
 
 }
