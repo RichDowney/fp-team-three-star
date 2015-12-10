@@ -27,8 +27,6 @@ public class AutoTweetUI {
 	private Stage primaryStage;
 	private TwitterBotUI twitterBotUI;
 	
-	
-	
 	public AutoTweetUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
 		this.primaryStage = primaryStage;
 		this.twitterBotUI = twitterBotUI;

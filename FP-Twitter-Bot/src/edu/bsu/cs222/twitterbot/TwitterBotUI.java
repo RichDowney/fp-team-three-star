@@ -43,6 +43,7 @@ public class TwitterBotUI extends Application {
 	protected AlertFactory alertFactory = new AlertFactory();
 	private AutoTweetUI autoUI;
 	private ManualTweetUI manualUI;
+	private TypeOfTweetUI tweetTypeUI;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
 	private Label userSelectorLabel = new Label("Select User To Tweet From");
@@ -74,11 +75,6 @@ public class TwitterBotUI extends Application {
 	private Button saveInfoButton = new Button("Save Info");
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Scene verifyScene = new Scene(verifyGrid);
-	
-	private GridPane typeOfTweetGrid = new GridPane();
-	private Button manualButton = new Button("Manual Tweet");
-	private Button automaticButton = new Button("Automatic Tweet");
-	private Scene tweetTypeScene = new Scene(typeOfTweetGrid);
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -93,13 +89,14 @@ public class TwitterBotUI extends Application {
 		autoUI.setUp();
 		manualUI = new ManualTweetUI(primaryStage, this);
 		manualUI.setUp();
+		tweetTypeUI = new TypeOfTweetUI(primaryStage, this);
+		tweetTypeUI.setUp();
 	}
 	
 	private void setAllGrids(){
 		setGrid(startGrid);
 		setGrid(apiGrid);
 		setGrid(verifyGrid);
-		setGrid(typeOfTweetGrid);
 	}
 
 	protected void setGrid(GridPane grid) {
@@ -113,7 +110,6 @@ public class TwitterBotUI extends Application {
 		addToStartGrid();
 		addtoApiGrid();
 		addToVerifyGrid();
-		addToTypeOfTweetGrid();
 	}
 	
 	private void addToStartGrid() {
@@ -145,11 +141,6 @@ public class TwitterBotUI extends Application {
 		verifyGrid.add(getAuthorizationUrlButton, 0, 0);
 		verifyGrid.add(tokenVerifierLabel, 0, 1);
 	}
-	
-	private void addToTypeOfTweetGrid() {
-		typeOfTweetGrid.add(manualButton,0,0);
-		typeOfTweetGrid.add(automaticButton,1,0);
-	}
 
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
@@ -179,8 +170,6 @@ public class TwitterBotUI extends Application {
 	private void setButtonActions(Stage primaryStage) {
 		setAddNewUserButtonAction(primaryStage);
 		setStartTweetingButton(primaryStage);
-		setManualButton(primaryStage);
-		setAutomaticButton(primaryStage);
 		
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
@@ -210,22 +199,6 @@ public class TwitterBotUI extends Application {
 		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				switchSceneToTweetTypeScene(primaryStage);
-			}
-		});
-	}
-	
-	private void setManualButton(Stage primaryStage) {
-		manualButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				switchSceneToTweetScene(primaryStage);
-			}
-		});
-	}
-	
-	private void setAutomaticButton(Stage primaryStage) {
-		automaticButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				switchSceneToAutomaticTweetScene(primaryStage);
 			}
 		});
 	}
@@ -298,7 +271,7 @@ public class TwitterBotUI extends Application {
 		if (selectedUser.equals("None")){
 			alertFactory.createInfoAlert("You must select a username to start tweeting.");
 		} else {
-			primaryStage.setScene(tweetTypeScene);
+			primaryStage.setScene(tweetTypeUI.getTweetTypeTweetScene());
 			setUpTweetService();
 		}
 	}
@@ -313,11 +286,11 @@ public class TwitterBotUI extends Application {
 		oAuth.createAccessTokenFromValues(tokenString, tokenSecret);
 	}
 	
-	private void switchSceneToTweetScene(Stage primaryStage) {
+	protected void switchSceneToTweetScene(Stage primaryStage) {
 		primaryStage.setScene(manualUI.getManualTweetScene());
 }
 	
-	private void switchSceneToAutomaticTweetScene(Stage primaryStage) {
+	protected void switchSceneToAutomaticTweetScene(Stage primaryStage) {
 			primaryStage.setScene(autoUI.getAutomaticTweetScene());
 	}
 	
