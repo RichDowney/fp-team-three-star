@@ -11,9 +11,9 @@ import javafx.stage.Stage;
 
 public class TwitterBotUI extends Application {
 
+	private String selectedUser;
 	protected String apiKey;
 	protected String apiSecret;
-	private String selectedUser;
 	protected ParseFromJSONFile usersParser;
 	protected JSONObject usersJSONObject;
 	protected OAuth oAuth;
