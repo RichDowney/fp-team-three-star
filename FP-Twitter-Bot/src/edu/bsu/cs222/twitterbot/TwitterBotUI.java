@@ -129,7 +129,7 @@ public class TwitterBotUI extends Application {
 			primaryStage.setScene(autoUI.getAutomaticTweetScene());
 	}
 	
-	protected String getInputedNewUserName() {
+	protected String getNewUserName() {
 		return apiUI.userNameInputField.getText();
 	}
 

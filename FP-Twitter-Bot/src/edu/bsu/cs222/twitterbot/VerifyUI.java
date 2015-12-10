@@ -110,7 +110,7 @@ public class VerifyUI {
 		Token accessToken = twitterBotUI.oAuth.getAccessToken();
 		String tokenString = accessToken.getToken();
 		String tokenSecret = accessToken.getSecret();
-		UserValueFileWriter userWriter = new UserValueFileWriter(twitterBotUI.getInputedNewUserName(), tokenString, tokenSecret);
+		UserValueFileWriter userWriter = new UserValueFileWriter(twitterBotUI.getNewUserName(), tokenString, tokenSecret);
 		userWriter.tryToWriteToJsonFile(twitterBotUI.usersJSONObject);
 	}
 
