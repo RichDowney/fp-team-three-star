@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class TwitterBotUI extends Application {
+public class UIController extends Application {
 
 	private String selectedUser;
 	protected String apiKey;

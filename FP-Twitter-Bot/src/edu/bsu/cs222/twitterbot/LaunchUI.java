@@ -22,11 +22,11 @@ public class LaunchUI {
 	private GridPane startGrid = new GridPane();
 	private Scene startScene = new Scene(startGrid);
 	private Stage primaryStage;
-	private TwitterBotUI twitterBotUI;
+	private UIController controller;
 	
-	public LaunchUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
+	public LaunchUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
-		this.twitterBotUI = twitterBotUI;
+		this.controller = controller;
 	}
 	
 	public Scene getStartScene() {
@@ -34,7 +34,7 @@ public class LaunchUI {
 	}
 	
 	protected void setUp() {
-		twitterBotUI.setGrid(startGrid);
+		controller.setGrid(startGrid);
 		addToStartGrid();
 		configureComboBox();
 		setAddNewUserButtonAction(primaryStage);
@@ -57,10 +57,10 @@ public class LaunchUI {
 	}
 	
 	private void addUsersFromFile() {
-		twitterBotUI.usersParser = new ParseFromJSONFile("twitter-values/users.json");
-		twitterBotUI.usersJSONObject = twitterBotUI.usersParser.tryTtoReadFromFile();
-		if(twitterBotUI.usersJSONObject != null){	
-			for(Iterator<?> iterator = twitterBotUI.usersJSONObject.keySet().iterator(); iterator.hasNext();) {
+		controller.usersParser = new ParseFromJSONFile("twitter-values/users.json");
+		controller.usersJSONObject = controller.usersParser.tryTtoReadFromFile();
+		if(controller.usersJSONObject != null){	
+			for(Iterator<?> iterator = controller.usersJSONObject.keySet().iterator(); iterator.hasNext();) {
 				String key = (String) iterator.next();
 				userSelector.getItems().add(key);
 			}
@@ -70,7 +70,7 @@ public class LaunchUI {
 	private void setAddNewUserButtonAction(Stage primaryStage) {
 		addNewUserButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToApiScene(primaryStage);
+				controller.switchSceneToApiScene(primaryStage);
 			}
 		});
 	}
@@ -78,7 +78,7 @@ public class LaunchUI {
 	private void setStartTweetingButton(Stage primaryStage) {
 		startTweetingButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToTweetTypeScene(primaryStage);
+				controller.switchSceneToTweetTypeScene(primaryStage);
 			}
 		});
 	}

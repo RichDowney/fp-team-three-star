@@ -13,11 +13,11 @@ public class TypeOfTweetUI {
 	private Button automaticButton = new Button("Automatic Tweet");
 	private Scene tweetTypeScene = new Scene(typeOfTweetGrid);
 	private Stage primaryStage;
-	private TwitterBotUI twitterBotUI;
+	private UIController controller;
 	
-	public TypeOfTweetUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
+	public TypeOfTweetUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
-		this.twitterBotUI = twitterBotUI;
+		this.controller = controller;
 	}
 	
 	public Scene getTweetTypeTweetScene() {
@@ -25,7 +25,7 @@ public class TypeOfTweetUI {
 	}
 	
 	protected void setUp() {
-		twitterBotUI.setGrid(typeOfTweetGrid);
+		controller.setGrid(typeOfTweetGrid);
 		addToTypeOfTweetGrid();
 		setManualButton(primaryStage);
 		setAutomaticButton(primaryStage);
@@ -39,7 +39,7 @@ public class TypeOfTweetUI {
 	private void setManualButton(Stage primaryStage) {
 		manualButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToTweetScene(primaryStage);
+				controller.switchSceneToTweetScene(primaryStage);
 			}
 		});
 	}
@@ -47,7 +47,7 @@ public class TypeOfTweetUI {
 	private void setAutomaticButton(Stage primaryStage) {
 		automaticButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToAutomaticTweetScene(primaryStage);
+				controller.switchSceneToAutomaticTweetScene(primaryStage);
 			}
 		});
 	}

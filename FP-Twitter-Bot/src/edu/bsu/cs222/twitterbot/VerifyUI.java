@@ -21,11 +21,11 @@ public class VerifyUI {
 	private Label tokenVerifierLabel = new Label("Token Verifier Code");
 	private Scene verifyScene = new Scene(verifyGrid);
 	private Stage primaryStage;
-	private TwitterBotUI twitterBotUI;
+	private UIController controller;
 	
-	public VerifyUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
+	public VerifyUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
-		this.twitterBotUI = twitterBotUI;
+		this.controller = controller;
 	}
 	
 	public Scene getVerifyScene() {
@@ -33,7 +33,7 @@ public class VerifyUI {
 	}
 	
 	protected void setUp() {
-		twitterBotUI.setGrid(verifyGrid);
+		controller.setGrid(verifyGrid);
 		addToVerifyGrid();
 		configureTextFields();
 		setGetAuthorizationUrlButtonAction();
@@ -67,7 +67,7 @@ public class VerifyUI {
 	private void setBackToApiButtonAction(Stage primaryStage) {
 		backToApiButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToApiScene(primaryStage);
+				controller.switchSceneToApiScene(primaryStage);
 			}
 		});
 	}
@@ -81,37 +81,37 @@ public class VerifyUI {
 	}
 	
 	private void generateAuthorizationUrl() {
-		twitterBotUI.createOAuthInstance();
-		twitterBotUI.oAuth.createOAuthService();
-		twitterBotUI.oAuth.createRequestToken();
-		twitterBotUI.oAuth.createAuthorizationUrl();
+		controller.createOAuthInstance();
+		controller.oAuth.createOAuthService();
+		controller.oAuth.createRequestToken();
+		controller.oAuth.createAuthorizationUrl();
 		displayAuthorizationUrl();
 	}
 	
 	private void displayAuthorizationUrl() {
-		String authorizationUrl = twitterBotUI.oAuth.getAuthorizationUrl();
+		String authorizationUrl = controller.oAuth.getAuthorizationUrl();
 		authorizationUrlOutputField.setText(authorizationUrl);
 	}
 	
 	private void tryToSaveInfo(Stage primaryStage) {
 		try {
 			saveInfo();
-			twitterBotUI.alertFactory.createConfirmAlert("Your account was saved!");
-			twitterBotUI.switchSceneToStartSceneAfterSave(primaryStage);
+			controller.alertFactory.createConfirmAlert("Your account was saved!");
+			controller.switchSceneToStartSceneAfterSave(primaryStage);
 		} catch (Exception e) {
-			twitterBotUI.alertFactory.createErrorAlert("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
+			controller.alertFactory.createErrorAlert("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
 		}
 	}
 	
 	private void saveInfo() throws Exception {
 		String verifierCode = tokenVerifierInputField.getText();
-		twitterBotUI.oAuth.createVerifier(verifierCode);
-		twitterBotUI.oAuth.createAccessToken();
-		Token accessToken = twitterBotUI.oAuth.getAccessToken();
+		controller.oAuth.createVerifier(verifierCode);
+		controller.oAuth.createAccessToken();
+		Token accessToken = controller.oAuth.getAccessToken();
 		String tokenString = accessToken.getToken();
 		String tokenSecret = accessToken.getSecret();
-		UserValueFileWriter userWriter = new UserValueFileWriter(twitterBotUI.getNewUserName(), tokenString, tokenSecret);
-		userWriter.tryToWriteToJsonFile(twitterBotUI.usersJSONObject);
+		UserValueFileWriter userWriter = new UserValueFileWriter(controller.getNewUserName(), tokenString, tokenSecret);
+		userWriter.tryToWriteToJsonFile(controller.usersJSONObject);
 	}
 
 }

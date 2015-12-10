@@ -24,11 +24,11 @@ public class ApiUI {
 	private Button writeApiValuesButton = new Button("Save API Values");
 	private Scene apiScene = new Scene(apiGrid);
 	private Stage primaryStage;
-	private TwitterBotUI twitterBotUI;
+	private UIController controller;
 	
-	public ApiUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
+	public ApiUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
-		this.twitterBotUI = twitterBotUI;
+		this.controller = controller;
 	}
 	
 	public Scene getAPIScene() {
@@ -36,7 +36,7 @@ public class ApiUI {
 	}
 	
 	protected void setUp() {
-		twitterBotUI.setGrid(apiGrid);
+		controller.setGrid(apiGrid);
 		addtoApiGrid();
 		configureTextFields();
 	}
@@ -66,7 +66,7 @@ public class ApiUI {
 	private void setReadApiValuesButtonAction() {
 		readApiValuesButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.getApiValuesFromFile();
+				controller.getApiValuesFromFile();
 				setApiValues();
 			}
 		});
@@ -84,7 +84,7 @@ public class ApiUI {
 	private void setApiBackButtonAction(Stage primaryStage) {
 		apiBackButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToStartScene(primaryStage);
+				controller.switchSceneToStartScene(primaryStage);
 			}
 		});
 	}
@@ -93,14 +93,14 @@ public class ApiUI {
 		apiNextButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				setApiValues();
-				twitterBotUI.switchSceneToVerifyScene(primaryStage);
+				controller.switchSceneToVerifyScene(primaryStage);
 			}
 		});
 	}
 	
 	private void setApiValues() {
-		String apiKey = twitterBotUI.apiKey;
-		String apiSecret = twitterBotUI.apiSecret;
+		String apiKey = controller.apiKey;
+		String apiSecret = controller.apiSecret;
 		apiKeyInputField.setText(apiKey);
 		apiSecretInputField.setText(apiSecret);
 	}

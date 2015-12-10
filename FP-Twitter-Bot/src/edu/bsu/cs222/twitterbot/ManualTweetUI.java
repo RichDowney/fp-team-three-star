@@ -32,11 +32,11 @@ public class ManualTweetUI {
 	private Scene tweetPostScene = new Scene(tweetPostGrid);
 	private final int tweetLimit = 140;
 	private Stage primaryStage;
-	private TwitterBotUI twitterBotUI;
+	private UIController controller;
 	
-	public ManualTweetUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
+	public ManualTweetUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
-		this.twitterBotUI = twitterBotUI;
+		this.controller = controller;
 	}
 	
 	public Scene getManualTweetScene() {
@@ -44,7 +44,7 @@ public class ManualTweetUI {
 	}
 	
 	protected void setUp() {
-		twitterBotUI.setGrid(tweetPostGrid);
+		controller.setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
 		configureTextFields();
 		setGifButtonAction();
@@ -102,7 +102,7 @@ public class ManualTweetUI {
 		try {
 			generateGif();
 		} catch (ParseException | IOException e) {
-			twitterBotUI.alertFactory.createErrorAlert("Error getting the Giphy URL, check your internet connection");
+			controller.alertFactory.createErrorAlert("Error getting the Giphy URL, check your internet connection");
 		}
 	}
 	
@@ -118,15 +118,15 @@ public class ManualTweetUI {
 	private void tryToPostTweet() {
 		try {
 			postTweet();
-			twitterBotUI.alertFactory.createConfirmAlert("Tweet Successfully Posted!");
+			controller.alertFactory.createConfirmAlert("Tweet Successfully Posted!");
 		} catch (UnsupportedEncodingException e) {
-			twitterBotUI.alertFactory.createErrorAlert("Error posting tweet to your Twitter account, check your internet connection and tweet content");
+			controller.alertFactory.createErrorAlert("Error posting tweet to your Twitter account, check your internet connection and tweet content");
 		}
 	}
 
 	private void postTweet() throws UnsupportedEncodingException {
 		String tweetText = tweetTextInputField.getText();
-		TweetPoster tweetPoster = new TweetPoster(twitterBotUI.oAuth, tweetText);
+		TweetPoster tweetPoster = new TweetPoster(controller.oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
 	}
 

@@ -25,11 +25,11 @@ public class AutoTweetUI {
 	private Button startAutomaticButton = new Button("Begin Auto Tweeting");
 	private Scene automaticTweetScene = new Scene(automaticTweetGrid);
 	private Stage primaryStage;
-	private TwitterBotUI twitterBotUI;
+	private UIController controller;
 	
-	public AutoTweetUI(Stage primaryStage, TwitterBotUI twitterBotUI) {
+	public AutoTweetUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
-		this.twitterBotUI = twitterBotUI;
+		this.controller = controller;
 	}
 
 	public Scene getAutomaticTweetScene() {
@@ -37,7 +37,7 @@ public class AutoTweetUI {
 	}
 
 	protected void setUp() {
-		twitterBotUI.setGrid(automaticTweetGrid);
+		controller.setGrid(automaticTweetGrid);
 		configureTimerComboBox();
 		addToAutomaticTweetGrid();
 		setAutomaticButtonAction();
@@ -69,7 +69,7 @@ public class AutoTweetUI {
 	private void setBackToTweetTypeButtonAction(Stage primaryStage) {
 		backToTweetTypeButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				twitterBotUI.switchSceneToTweetTypeScene(primaryStage);
+				controller.switchSceneToTweetTypeScene(primaryStage);
 			}
 		});
 	}
@@ -86,7 +86,7 @@ public class AutoTweetUI {
 		try {
 			autoPostTweet();
 		} catch (Exception e) {
-			twitterBotUI.alertFactory.createErrorAlert("Something went wrong, check your Internet Connection");
+			controller.alertFactory.createErrorAlert("Something went wrong, check your Internet Connection");
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class AutoTweetUI {
 		String giphySearchTerm = autoGiphyInputField.getText();
 		int timeInterval = timeSelectedToMilSeconds();
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TweetTimer(twitterBotUI.oAuth, giphySearchTerm), timeInterval, timeInterval);
+		timer.scheduleAtFixedRate(new TweetTimer(controller.oAuth, giphySearchTerm), timeInterval, timeInterval);
 	}
 	
 	private int timeSelectedToMilSeconds() {
