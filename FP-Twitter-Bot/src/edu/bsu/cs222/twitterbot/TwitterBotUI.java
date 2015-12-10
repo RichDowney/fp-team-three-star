@@ -1,19 +1,10 @@
 package edu.bsu.cs222.twitterbot;
 
-import java.io.IOException;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLConnection;
 import java.util.Iterator;
-import java.util.Timer;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-import org.scribe.model.Token;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,9 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class TwitterBotUI extends Application {
@@ -38,12 +27,13 @@ public class TwitterBotUI extends Application {
 	private String apiSecret;
 	private String selectedUser;
 	private ParseFromJSONFile usersParser;
-	private JSONObject usersJSONObject;
+	protected JSONObject usersJSONObject;
 	protected OAuth oAuth;
 	protected AlertFactory alertFactory = new AlertFactory();
 	private AutoTweetUI autoUI;
 	private ManualTweetUI manualUI;
 	private TypeOfTweetUI tweetTypeUI;
+	private VerifyUI verifyUI;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
 	private Label userSelectorLabel = new Label("Select User To Tweet From");
@@ -67,15 +57,6 @@ public class TwitterBotUI extends Application {
 	private Button writeApiValuesButton = new Button("Save API Values");
 	private Scene apiScene = new Scene(apiGrid);
 
-	private GridPane verifyGrid = new GridPane();
-	private TextField authorizationUrlOutputField = new TextField();
-	private TextField tokenVerifierInputField = new TextField();
-	private Button backToApiButton = new Button("Previous");
-	private Button getAuthorizationUrlButton = new Button("Get Authorization URL");
-	private Button saveInfoButton = new Button("Save Info");
-	private Label tokenVerifierLabel = new Label("Token Verifier Code");
-	private Scene verifyScene = new Scene(verifyGrid);
-
 	@Override
 	public void start(Stage primaryStage) {
 		setAllGrids();
@@ -91,12 +72,13 @@ public class TwitterBotUI extends Application {
 		manualUI.setUp();
 		tweetTypeUI = new TypeOfTweetUI(primaryStage, this);
 		tweetTypeUI.setUp();
+		verifyUI = new VerifyUI(primaryStage, this);
+		verifyUI.setUp();
 	}
 	
 	private void setAllGrids(){
 		setGrid(startGrid);
 		setGrid(apiGrid);
-		setGrid(verifyGrid);
 	}
 
 	protected void setGrid(GridPane grid) {
@@ -109,7 +91,6 @@ public class TwitterBotUI extends Application {
 	private void addToAllGrids() {
 		addToStartGrid();
 		addtoApiGrid();
-		addToVerifyGrid();
 	}
 	
 	private void addToStartGrid() {
@@ -133,21 +114,10 @@ public class TwitterBotUI extends Application {
 		apiGrid.add(apiBackButton, 0, 4);
 		apiGrid.add(apiNextButton, 1, 4);
 	}
-	private void addToVerifyGrid() {
-		verifyGrid.add(authorizationUrlOutputField, 1, 0);
-		verifyGrid.add(tokenVerifierInputField, 1, 1);
-		verifyGrid.add(backToApiButton, 0, 2);
-		verifyGrid.add(saveInfoButton, 1, 2);
-		verifyGrid.add(getAuthorizationUrlButton, 0, 0);
-		verifyGrid.add(tokenVerifierLabel, 0, 1);
-	}
 
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
 		apiSecretInputField.setPromptText("Paste in API Secret");
-		authorizationUrlOutputField.setPromptText("Goto for Authorization Code");
-		authorizationUrlOutputField.setEditable(false);
-		tokenVerifierInputField.setPromptText("Paste in Authorization Code");
 	}
 	
 	private void configureComboBox() {
@@ -175,9 +145,6 @@ public class TwitterBotUI extends Application {
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
 		setApiNextButtonAction(primaryStage);
-		setGetAuthorizationUrlButtonAction();
-		setBackToApiButtonAction(primaryStage);
-		setSaveInfoButtonAction(primaryStage);
 	}
 	
 	private void setStage(Stage primaryStage) {
@@ -237,32 +204,8 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-
-	private void setGetAuthorizationUrlButtonAction() {
-		getAuthorizationUrlButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				generateAuthorizationUrl();
-			}
-		});
-	}
 	
-	private void setBackToApiButtonAction(Stage primaryStage) {
-		backToApiButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				switchSceneToApiScene(primaryStage);
-			}
-		});
-	}
-	
-	private void setSaveInfoButtonAction(Stage primaryStage) {
-		saveInfoButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				tryToSaveInfo(primaryStage);
-			}
-		});
-	}
-	
-	private void switchSceneToApiScene(Stage primaryStage) {
+	protected void switchSceneToApiScene(Stage primaryStage) {
 		primaryStage.setScene(apiScene);
 	}
 	
@@ -320,52 +263,21 @@ public class TwitterBotUI extends Application {
 	}
 	
 	private void switchSceneToVerifyScene(Stage primaryStage) {
-		primaryStage.setScene(verifyScene);
+		primaryStage.setScene(verifyUI.getVerifyScene());
 	}
 	
-	private void generateAuthorizationUrl() {
-		createOAuthInstance();
-		oAuth.createOAuthService();
-		oAuth.createRequestToken();
-		oAuth.createAuthorizationUrl();
-		displayAuthorizationUrl();
-	}
-	
-	private void createOAuthInstance() {
+	protected void createOAuthInstance() {
 		oAuth = new OAuth(apiKey, apiSecret);
 	}
 	
-	private void displayAuthorizationUrl() {
-		String authorizationUrl = oAuth.getAuthorizationUrl();
-		authorizationUrlOutputField.setText(authorizationUrl);
-	}
-	
-	private void tryToSaveInfo(Stage primaryStage) {
-		try {
-			saveInfo();
-			alertFactory.createConfirmAlert("Your account was saved!");
-			switchSceneToStartSceneAfterSave(primaryStage);
-		} catch (Exception e) {
-			alertFactory.createErrorAlert("Given values did not save properly. Check the apiKey, apiSecret, AuthorizationCode and your Internet Connection");
-		}
-	}
-	
-	private void saveInfo() throws Exception {
-		String verifierCode = tokenVerifierInputField.getText();
-		oAuth.createVerifier(verifierCode);
-		oAuth.createAccessToken();
-		Token accessToken = oAuth.getAccessToken();
-		String tokenString = accessToken.getToken();
-		String tokenSecret = accessToken.getSecret();
-		String userName = userNameInputField.getText();
-		UserValueFileWriter userWriter = new UserValueFileWriter(userName, tokenString, tokenSecret);
-		userWriter.tryToWriteToJsonFile(usersJSONObject);
-	}
-	
-	private void switchSceneToStartSceneAfterSave(Stage primaryStage) {
+	protected void switchSceneToStartSceneAfterSave(Stage primaryStage) {
 		String userName = userNameInputField.getText();
 		userSelector.getItems().add(userName);
 		primaryStage.setScene(startScene);
+	}
+	
+	protected String getInputedNewUserName() {
+		return userNameInputField.getText();
 	}
 
 }
