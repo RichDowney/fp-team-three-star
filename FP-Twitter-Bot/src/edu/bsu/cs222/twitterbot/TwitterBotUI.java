@@ -11,10 +11,6 @@ import javafx.stage.Stage;
 
 public class TwitterBotUI extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 	protected String apiKey;
 	protected String apiSecret;
 	private String selectedUser;
