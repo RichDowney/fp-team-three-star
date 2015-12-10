@@ -39,8 +39,9 @@ public class TwitterBotUI extends Application {
 	private String selectedUser;
 	private ParseFromJSONFile usersParser;
 	private JSONObject usersJSONObject;
-	private OAuth oAuth;
-	private AlertFactory alertFactory = new AlertFactory();
+	protected OAuth oAuth;
+	protected AlertFactory alertFactory = new AlertFactory();
+	private AutoTweetUI autoUI;
 	
 	private ComboBox<String> userSelector = new ComboBox<>();
 	private Label userSelectorLabel = new Label("Select User To Tweet From");
@@ -78,15 +79,6 @@ public class TwitterBotUI extends Application {
 	private Button automaticButton = new Button("Automatic Tweet");
 	private Scene tweetTypeScene = new Scene(typeOfTweetGrid);
 	
-	private GridPane automaticTweetGrid = new GridPane();
-	private ComboBox<String> timerSelector = new ComboBox<>();
-	private Label timerSelectorLabel = new Label("Select Time Interval To Tweet");
-	private TextField autoGiphyInputField = new TextField();
-	private Label autoGiphyLabel = new Label("Giphy Tag");
-	private Button backToTweetTypeButton = new Button("Back");
-	private Button startAutomaticButton = new Button("Begin Auto Tweeting");
-	private Scene automaticTweetScene = new Scene(automaticTweetGrid);
-	
 	private GridPane tweetPostGrid = new GridPane();
 	private HBox hbButtons = new HBox();
 	private TextField giphyInputField = new TextField();
@@ -104,9 +96,11 @@ public class TwitterBotUI extends Application {
 		addToAllGrids();
 		configureTextFields();
 		configureComboBox();
-		configureTimerComboBox();
+		
 		setButtonActions(primaryStage);
 		setStage(primaryStage);
+		autoUI = new AutoTweetUI(primaryStage, this);
+		autoUI.setUp();
 	}
 	
 	private void setAllGrids(){
@@ -114,16 +108,15 @@ public class TwitterBotUI extends Application {
 		setGrid(apiGrid);
 		setGrid(verifyGrid);
 		setGrid(typeOfTweetGrid);
-		setGrid(automaticTweetGrid);
+
 		setGrid(tweetPostGrid);
 	}
 
-	private void setGrid(GridPane grid) {
+	protected void setGrid(GridPane grid) {
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
 		grid.setVgap(15);
 		grid.setPadding(new Insets(30, 30, 30, 30));
-		hbButtons.setSpacing(10.0);
 	}
 	
 	private void addToAllGrids() {
@@ -131,7 +124,7 @@ public class TwitterBotUI extends Application {
 		addtoApiGrid();
 		addToVerifyGrid();
 		addToTypeOfTweetGrid();
-		addToAutomaticTweetGrid();
+
 		addtoTweetPostGrid();
 	}
 	
@@ -169,15 +162,6 @@ public class TwitterBotUI extends Application {
 		typeOfTweetGrid.add(manualButton,0,0);
 		typeOfTweetGrid.add(automaticButton,1,0);
 	}
-	
-	private void addToAutomaticTweetGrid() {
-		automaticTweetGrid.add(timerSelectorLabel,0,0);
-		automaticTweetGrid.add(timerSelector,1,0);
-		automaticTweetGrid.add(autoGiphyLabel,0,1);
-		automaticTweetGrid.add(autoGiphyInputField,1,1);
-		automaticTweetGrid.add(backToTweetTypeButton,0,2);
-		automaticTweetGrid.add(startAutomaticButton,1,2);
-	}
 
 	private void addtoTweetPostGrid() {
 		tweetPostGrid.add(giphyLabel,0,0);
@@ -199,6 +183,7 @@ public class TwitterBotUI extends Application {
 		tweetTextInputField.setPrefRowCount(5);
 		tweetTextInputField.setPrefColumnCount(15);
 		tweetTextInputField.setWrapText(true);
+		hbButtons.setSpacing(10.0);
 		configureTweetCharacterLimit();
 	}
 	
@@ -230,26 +215,13 @@ public class TwitterBotUI extends Application {
 			}
 		}
 	}
-	
-	private void configureTimerComboBox() {
-		timerSelector.getItems().add("1 Minute");
-		timerSelector.getItems().add("5 Minutes");
-		timerSelector.getItems().add("10 Minutes");
-		timerSelector.getItems().add("15 Minutes");
-		timerSelector.getItems().add("20 Minutes");
-		timerSelector.getItems().add("25 Minutes");
-		timerSelector.getItems().add("30 Minutes");
-		timerSelector.getItems().add("45 Minutes");
-		timerSelector.getItems().add("1 Hour");
-		timerSelector.setValue("10 Minutes");
-	}
 
 	private void setButtonActions(Stage primaryStage) {
 		setAddNewUserButtonAction(primaryStage);
 		setStartTweetingButton(primaryStage);
 		setManualButton(primaryStage);
 		setAutomaticButton(primaryStage);
-		setAutomaticButtonAction();
+		
 		setReadApiValuesButtonAction();
 		setWriteApiValuesButtonAction();
 		setApiBackButtonAction(primaryStage);
@@ -257,7 +229,7 @@ public class TwitterBotUI extends Application {
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
 		setSaveInfoButtonAction(primaryStage);
-		setBackToTweetTypeButtonAction(primaryStage);
+
 		setGifButtonAction();
 		setPostTweetButtonAction();
 	}
@@ -367,30 +339,6 @@ public class TwitterBotUI extends Application {
 			}
 		});
 	}
-	
-	private void setBackToTweetTypeButtonAction(Stage primaryStage) {
-		backToTweetTypeButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				switchSceneToTweetTypeScene(primaryStage);
-			}
-		});
-	}
-	
-	private void setAutomaticButtonAction() {
-		startAutomaticButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				tryToAutoPostTweets();
-			}
-		});
-	}
-	
-	private void tryToAutoPostTweets() {
-		try {
-			autoPostTweet();
-		} catch (Exception e) {
-			alertFactory.createErrorAlert("Something went wrong, check your Internet Connection");
-		}
-	}
 
 	private void setPostTweetButtonAction() {
 		postTweetButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -404,7 +352,7 @@ public class TwitterBotUI extends Application {
 		primaryStage.setScene(apiScene);
 	}
 	
-	private void switchSceneToTweetTypeScene(Stage primaryStage) {
+	protected void switchSceneToTweetTypeScene(Stage primaryStage) {
 		selectedUser = this.userSelector.getValue();
 		if (selectedUser.equals("None")){
 			alertFactory.createInfoAlert("You must select a username to start tweeting.");
@@ -429,7 +377,7 @@ public class TwitterBotUI extends Application {
 }
 	
 	private void switchSceneToAutomaticTweetScene(Stage primaryStage) {
-			primaryStage.setScene(automaticTweetScene);
+			primaryStage.setScene(autoUI.getAutomaticTweetScene());
 	}
 	
 	private void getApiValuesFromFile() {
@@ -536,51 +484,6 @@ public class TwitterBotUI extends Application {
 		String tweetText = tweetTextInputField.getText();
 		TweetPoster tweetPoster = new TweetPoster(oAuth, tweetText);
 		tweetPoster.tryToPostTweet();
-	}
-	
-	private void autoPostTweet() throws ParseException, IOException {
-		String giphySearchTerm = autoGiphyInputField.getText();
-		int timeInterval = timeSelectedToMilSeconds();
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TweetTimer(oAuth, giphySearchTerm), timeInterval, timeInterval);
-	}
-	
-	private int timeSelectedToMilSeconds() {
-		String timeSelected = this.timerSelector.getValue();
-		int timeInterval;
-		switch (timeSelected) {
-		case "1 Minute":
-			timeInterval = 1 * 60 * 1000;
-			break;
-		case "5 Minutes":
-			timeInterval = 5 * 60 * 1000;
-			break;
-		case "10 Minutes":
-			timeInterval = 10 * 60 * 1000;
-			break;
-		case "15 Minutes":
-			timeInterval = 15 * 60 * 1000;
-			break;
-		case "20 Minutes":
-			timeInterval = 20 * 60 * 1000;
-			break;
-		case "25 Minutes":
-			timeInterval = 25 * 60 * 1000;
-			break;
-		case "30 Minutes":
-			timeInterval = 30 * 60 * 1000;
-			break;
-		case "45 Minutes":
-			timeInterval = 45 * 60 * 1000;
-			break;
-		case "1 Hour":
-			timeInterval = 60 * 60 * 1000;
-			break;
-		default:
-			timeInterval = 10 * 60 * 1000;	
-			break;
-		}
-		return timeInterval;
 	}
 
 }
