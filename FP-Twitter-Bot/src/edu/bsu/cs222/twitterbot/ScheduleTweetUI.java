@@ -117,6 +117,8 @@ public class ScheduleTweetUI {
 		long timeToTweet = calculateTime();
 		Timer timer = new Timer();
 		timer.schedule(new TweetTimer(controller.oAuth, giphySearchTerm), timeToTweet );
+		scheduleGrid.getChildren().removeAll(backToTweetTypeButton);
+		controller.alertFactory.createConfirmAlert("Tweet Scheduled");
 	}
 	
 	private long calculateTime() {

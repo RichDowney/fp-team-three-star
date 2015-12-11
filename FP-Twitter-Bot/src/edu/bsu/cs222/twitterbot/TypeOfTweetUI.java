@@ -12,6 +12,7 @@ public class TypeOfTweetUI {
 	private Button manualButton = new Button("Manual Tweet");
 	private Button automaticButton = new Button("Automatic Tweet");
 	private Button scheduleTweetButton = new Button("Schedule Tweet");
+	private Button typeBackButton = new Button("Back");
 	private Scene tweetTypeScene = new Scene(typeOfTweetGrid);
 	private Stage primaryStage;
 	private UIController controller;
@@ -31,6 +32,7 @@ public class TypeOfTweetUI {
 		setManualButton(primaryStage);
 		setAutomaticButton(primaryStage);
 		setScheduleTweetButton(primaryStage);
+		setTypeBackButtonAction(primaryStage);
 		setTweetTypeSceneStyle();
 	}
 	
@@ -42,6 +44,7 @@ public class TypeOfTweetUI {
 		typeOfTweetGrid.add(manualButton,0,0);
 		typeOfTweetGrid.add(automaticButton,1,0);
 		typeOfTweetGrid.add(scheduleTweetButton,2,0);
+		typeOfTweetGrid.add(typeBackButton,0,2);
 	}
 	
 	private void setManualButton(Stage primaryStage) {
@@ -64,6 +67,14 @@ public class TypeOfTweetUI {
 		scheduleTweetButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				controller.switchSceneToScheduleTweetScene(primaryStage);
+			}
+		});
+	}
+	
+	private void setTypeBackButtonAction(Stage primaryStage) {
+		typeBackButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				controller.switchSceneToStartScene(primaryStage);
 			}
 		});
 	}

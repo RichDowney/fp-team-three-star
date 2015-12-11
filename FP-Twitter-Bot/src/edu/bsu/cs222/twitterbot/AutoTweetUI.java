@@ -26,6 +26,7 @@ public class AutoTweetUI {
 	private Scene automaticTweetScene = new Scene(automaticTweetGrid);
 	private Stage primaryStage;
 	private UIController controller;
+	private Timer timer;
 	
 	public AutoTweetUI(Stage primaryStage, UIController controller) {
 		this.primaryStage = primaryStage;
@@ -98,8 +99,10 @@ public class AutoTweetUI {
 	private void autoPostTweet() throws ParseException, IOException {
 		String giphySearchTerm = autoGiphyInputField.getText();
 		int timeInterval = timeSelectedToMilSeconds();
-		Timer timer = new Timer(true);
+		timer = new Timer(true);
 		timer.scheduleAtFixedRate(new TweetTimer(controller.oAuth, giphySearchTerm), 0, timeInterval);
+		automaticTweetGrid.getChildren().removeAll(backToTweetTypeButton);
+		controller.alertFactory.createConfirmAlert("Started Automatic Tweeting System, Exit Program To Stop System.");
 	}
 	
 	private int timeSelectedToMilSeconds() {

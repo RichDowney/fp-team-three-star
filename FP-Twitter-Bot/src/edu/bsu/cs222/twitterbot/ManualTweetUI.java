@@ -25,6 +25,7 @@ public class ManualTweetUI {
 	private HBox hbButtons = new HBox();
 	private TextField giphyInputField = new TextField();
 	private TextArea tweetTextInputField = new TextArea();
+	private Button manualBackButton = new Button("Back");
 	private Button gifButton = new Button("Get Gif");
 	private Button postTweetButton = new Button("Post Tweet");
 	private Label giphyLabel = new Label("Giphy Tag");
@@ -47,6 +48,7 @@ public class ManualTweetUI {
 		controller.setGrid(tweetPostGrid);
 		addtoTweetPostGrid();
 		configureTextFields();
+		setManualBackButtonAction(primaryStage);
 		setGifButtonAction();
 		setPostTweetButtonAction();
 		setTweetPostSceneStyle();
@@ -61,6 +63,7 @@ public class ManualTweetUI {
 		tweetPostGrid.add(giphyInputField,1,0);
 		tweetPostGrid.add(tweetTextLabel, 0, 2);
 		tweetPostGrid.add(tweetTextInputField, 1, 2);
+		tweetPostGrid.add(manualBackButton, 0, 3);
 		hbButtons.getChildren().addAll (gifButton, postTweetButton);
 		tweetPostGrid.add(hbButtons, 1, 3, 2, 1);
 	}
@@ -83,6 +86,14 @@ public class ManualTweetUI {
 						tweetTextInputField.setText(tweetTextInputField.getText().substring(0, tweetLimit));
 					}
 				}
+			}
+		});
+	}
+	
+	private void setManualBackButtonAction(Stage primaryStage) {
+		manualBackButton.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				controller.switchSceneToStartScene(primaryStage);
 			}
 		});
 	}

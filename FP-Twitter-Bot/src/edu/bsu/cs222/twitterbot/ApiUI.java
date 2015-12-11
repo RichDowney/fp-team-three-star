@@ -18,7 +18,7 @@ public class ApiUI {
 	private Label userNameLabel = new Label("Username");
 	private Label apiKeyLabel = new Label("API Key");
 	private Label apiSecretLabel = new Label("API Secret");
-	private Button apiBackButton = new Button("Previous");
+	private Button apiBackButton = new Button("Back");
 	private Button apiNextButton = new Button("Next");
 	private Button readApiValuesButton = new Button("Get Saved API Values");
 	private Button writeApiValuesButton = new Button("Save API Values");
@@ -39,6 +39,10 @@ public class ApiUI {
 		controller.setGrid(apiGrid);
 		addtoApiGrid();
 		configureTextFields();
+		setReadApiValuesButtonAction();
+		setWriteApiValuesButtonAction();
+		setApiBackButtonAction(primaryStage);
+		setApiNextButtonAction(primaryStage);
 		setApiSceneStyle();
 	}
 	
@@ -62,10 +66,6 @@ public class ApiUI {
 	private void configureTextFields() {
 		apiKeyInputField.setPromptText("Paste in API Key");
 		apiSecretInputField.setPromptText("Paste in API Secret");
-		setReadApiValuesButtonAction();
-		setWriteApiValuesButtonAction();
-		setApiBackButtonAction(primaryStage);
-		setApiNextButtonAction(primaryStage);
 	}
 	
 	private void setReadApiValuesButtonAction() {
