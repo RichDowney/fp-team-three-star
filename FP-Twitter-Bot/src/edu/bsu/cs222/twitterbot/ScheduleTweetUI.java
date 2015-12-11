@@ -3,8 +3,6 @@ package edu.bsu.cs222.twitterbot;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.Calendar;
 import java.util.Timer;
 
 import org.json.simple.parser.ParseException;
