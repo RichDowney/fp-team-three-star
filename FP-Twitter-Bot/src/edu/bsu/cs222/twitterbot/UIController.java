@@ -25,6 +25,7 @@ public class UIController extends Application {
 	private TypeOfTweetUI tweetTypeUI;
 	private ManualTweetUI manualUI;
 	private AutoTweetUI autoUI;
+	private ScheduleTweetUI scheduleUI;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -44,6 +45,7 @@ public class UIController extends Application {
 		tweetTypeUI = new TypeOfTweetUI(primaryStage, this);
 		manualUI = new ManualTweetUI(primaryStage, this);
 		autoUI = new AutoTweetUI(primaryStage, this);
+		scheduleUI = new ScheduleTweetUI(primaryStage, this);
 	}
 	
 	private void setUpAllUIClasses() {
@@ -53,13 +55,15 @@ public class UIController extends Application {
 		tweetTypeUI.setUp();
 		manualUI.setUp();
 		autoUI.setUp();
+		scheduleUI.setUp();
 	}
 	
 	private void setStage(Stage primaryStage) {
 		Scene startScene = launchUI.getStartScene();
 		primaryStage.setTitle("Twitter Bot");
 		primaryStage.setScene(startScene);
-		primaryStage.sizeToScene();
+		primaryStage.setMinHeight(300);
+		primaryStage.setMinWidth(600);
 		primaryStage.show();
 	}
 
@@ -126,7 +130,11 @@ public class UIController extends Application {
 	}
 	
 	protected void switchSceneToAutomaticTweetScene(Stage primaryStage) {
-			primaryStage.setScene(autoUI.getAutomaticTweetScene());
+		primaryStage.setScene(autoUI.getAutomaticTweetScene());
+	}
+	
+	protected void switchSceneToScheduleTweetScene(Stage primaryStage) {
+		primaryStage.setScene(scheduleUI.getScheduleTweetScene());
 	}
 	
 	protected String getNewUserName() {
