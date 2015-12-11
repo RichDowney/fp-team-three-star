@@ -42,6 +42,11 @@ public class AutoTweetUI {
 		addToAutomaticTweetGrid();
 		setAutomaticButtonAction();
 		setBackToTweetTypeButtonAction(primaryStage);
+		setAutomaticTweetSceneStyle();
+	}
+	
+	private void setAutomaticTweetSceneStyle(){
+		automaticTweetScene.getStylesheets().add("uiStyle.css");
 	}
 	
 	private void addToAutomaticTweetGrid() {

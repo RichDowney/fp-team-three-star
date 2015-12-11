@@ -39,6 +39,11 @@ public class VerifyUI {
 		setGetAuthorizationUrlButtonAction();
 		setBackToApiButtonAction(primaryStage);
 		setSaveInfoButtonAction(primaryStage);
+		setVerifySceneStyle();
+	}
+	
+	private void setVerifySceneStyle(){
+		verifyScene.getStylesheets().add("uiStyle.css");
 	}
 	
 	private void addToVerifyGrid() {
