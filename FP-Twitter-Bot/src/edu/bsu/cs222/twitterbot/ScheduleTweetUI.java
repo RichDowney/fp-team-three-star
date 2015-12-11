@@ -128,7 +128,7 @@ public class ScheduleTweetUI {
 		long unixTime = System.currentTimeMillis() / 1000L;
 		dateMill = dateMill + hourMill + minuteMill;
 		long calculatedTime = dateMill - unixTime;
-		return calculatedTime;
+		return calculatedTime * 1000;
 	}
 
 }
