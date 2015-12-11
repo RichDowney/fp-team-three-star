@@ -98,8 +98,8 @@ public class AutoTweetUI {
 	private void autoPostTweet() throws ParseException, IOException {
 		String giphySearchTerm = autoGiphyInputField.getText();
 		int timeInterval = timeSelectedToMilSeconds();
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TweetTimer(controller.oAuth, giphySearchTerm), timeInterval, timeInterval);
+		Timer timer = new Timer(true);
+		timer.scheduleAtFixedRate(new TweetTimer(controller.oAuth, giphySearchTerm), 0, timeInterval);
 	}
 	
 	private int timeSelectedToMilSeconds() {

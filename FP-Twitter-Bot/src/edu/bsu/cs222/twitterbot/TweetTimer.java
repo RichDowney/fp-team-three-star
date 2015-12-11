@@ -19,8 +19,7 @@ public class TweetTimer extends TimerTask {
 	@Override
 	public void run() {
 		try {
-			String gifURL = generateAutoGif();
-			System.out.println(gifURL);
+			String gifURL = generateGif();
 			TweetPoster tweetPoster = new TweetPoster(oAuth, gifURL);
 			tweetPoster.tryToPostTweet();
 		} catch (ParseException e) {
@@ -31,7 +30,7 @@ public class TweetTimer extends TimerTask {
 		
 	}
 	
-	private String generateAutoGif() throws ParseException, IOException {
+	private String generateGif() throws ParseException, IOException {
 		GiphyConnection giphyConnection = new  GiphyConnection(giphySearchTerm);
 		URLConnection  connection = giphyConnection.connectToGiphy();
 		GiphyJSONParser giphyParser = new GiphyJSONParser(connection);
