@@ -25,6 +25,10 @@ public class UIController extends Application {
 	private TypeOfTweetUI tweetTypeUI;
 	private ManualTweetUI manualUI;
 	private AutoTweetUI autoUI;
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
