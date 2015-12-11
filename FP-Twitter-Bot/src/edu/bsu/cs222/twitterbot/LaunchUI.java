@@ -39,6 +39,11 @@ public class LaunchUI {
 		configureComboBox();
 		setAddNewUserButtonAction(primaryStage);
 		setStartTweetingButton(primaryStage);
+		setStartSceneStyle();
+	}
+	
+	private void setStartSceneStyle(){
+		startScene.getStylesheets().add("uiStyle.css");
 	}
 	
 	private void addToStartGrid() {

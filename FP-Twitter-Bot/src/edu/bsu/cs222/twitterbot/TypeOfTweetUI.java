@@ -29,6 +29,11 @@ public class TypeOfTweetUI {
 		addToTypeOfTweetGrid();
 		setManualButton(primaryStage);
 		setAutomaticButton(primaryStage);
+		setTweetTypeSceneStyle();
+	}
+	
+	private void setTweetTypeSceneStyle(){
+		tweetTypeScene.getStylesheets().add("uiStyle.css");
 	}
 	
 	private void addToTypeOfTweetGrid() {

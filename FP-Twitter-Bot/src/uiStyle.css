@@ -1,0 +1,13 @@
+.root {
+	-fx-font-size: 16pt;
+	-fx-font-weight: bold;
+    -fx-font-family: "Comic Sans MS", cursive, sans-serif;
+    -fx-base: #FC1700;
+    -fx-background: #ED9206;
+    -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 );
+}
+
+.button {
+	-fx-font: bold italic 20pt "Lucida Grande";
+    -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 );
+}

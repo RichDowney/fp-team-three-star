@@ -49,6 +49,11 @@ public class ManualTweetUI {
 		configureTextFields();
 		setGifButtonAction();
 		setPostTweetButtonAction();
+		setTweetPostSceneStyle();
+	}
+	
+	private void setTweetPostSceneStyle(){
+		tweetPostScene.getStylesheets().add("uiStyle.css");
 	}
 	
 	private void addtoTweetPostGrid() {

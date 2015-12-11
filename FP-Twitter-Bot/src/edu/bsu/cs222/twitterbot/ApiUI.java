@@ -39,6 +39,11 @@ public class ApiUI {
 		controller.setGrid(apiGrid);
 		addtoApiGrid();
 		configureTextFields();
+		setApiSceneStyle();
+	}
+	
+	private void setApiSceneStyle(){
+		apiScene.getStylesheets().add("uiStyle.css");
 	}
 	
 	private void addtoApiGrid() {
